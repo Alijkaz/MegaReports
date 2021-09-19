@@ -1,6 +1,6 @@
-name: MegaReports
+name: '${project.artifactId}'
 version: '${project.version}'
 main: ir.jeykey.megareports.MegaReports
 authors: [ Alijk ]
-description: MegaReports is the one and only report plugin you'll ever need
-website: https://jeykey.ir
+description: '${project.description}'
+website: '${project.url}'
