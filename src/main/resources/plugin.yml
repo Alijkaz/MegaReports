@@ -1,0 +1,6 @@
+name: MegaReports
+version: '${project.version}'
+main: ir.jeykey.megareports.MegaReports
+authors: [ Alijk ]
+description: MegaReports is the one and only report plugin you'll ever need
+website: https://jeykey.ir
