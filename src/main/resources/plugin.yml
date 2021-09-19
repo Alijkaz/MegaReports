@@ -1,6 +1,6 @@
-name: '${project.artifactId}'
-version: '${project.version}'
+name: ${project.artifactId}
+version: ${project.version}
 main: ir.jeykey.megareports.MegaReports
 authors: [ Alijk ]
-description: '${project.description}'
-website: '${project.url}'
+description: ${project.description}
+website: ${project.url}
