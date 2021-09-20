@@ -4,3 +4,7 @@ main: ir.jeykey.megareports.MegaReports
 authors: [ Alijk ]
 description: ${project.description}
 website: ${project.url}
+commands:
+  report:
+    description: Report a player
+    usage: /<command>

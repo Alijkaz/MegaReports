@@ -1,0 +1,7 @@
+# Main prefix for all plugin messages
+prefix: "&4[&cMegaReports&4] "
+
+# You're on cooldown message
+# Placeholders:
+#    - %seconds% = to show cooldown seconds
+cooldown: "You're on cooldown, please try again in %seconds% seconds!"

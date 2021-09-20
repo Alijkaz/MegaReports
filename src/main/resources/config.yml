@@ -1,1 +1,2 @@
-prefix: "&4[&cMegaReports&4] "
+# Cooldown for report command ( in seconds ) you can use -1 to disable cooldown
+cooldown: -1

@@ -1,0 +1,80 @@
+package ir.jeykey.megareports.utils;
+
+import ir.jeykey.megareports.MegaReports;
+import lombok.Getter;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.io.IOException;
+
+// ------------------------------------
+//       Handling Config Files
+// ------------------------------------
+public class YMLLoader {
+
+        private static File configFile;
+        private static File messagesFile;
+        @Getter private static FileConfiguration config;
+        @Getter private static FileConfiguration messages;
+
+        /**
+         * This method will fully load config files
+         *
+         * @throws IOException Will be thrown if config file is not readable
+         * @throws InvalidConfigurationException Will be thrown if config file is not valid
+         */
+        public static void load() throws IOException, InvalidConfigurationException {
+                // Loading and assigning config.yml
+                configFile = createConfig("config.yml");
+                config = new YamlConfiguration();
+                config.load(configFile);
+                Config.init();
+
+                // Loading and assigning messages.yml
+                messagesFile = createConfig("messages.yml");
+                messages = new YamlConfiguration();
+                messages.load(messagesFile);
+                Messages.init();
+        }
+
+        /**
+         * This method will attempt to create config.yml/messages.yml file with default values
+         *
+         * @param filename Config file name that will be created/loaded
+         * @return Config file in plugins data folder
+         */
+        public static File createConfig(String filename)
+        {
+                // Config file in plugins data folder
+                File file = new File(MegaReports.getInstance().getDataFolder(), filename);
+
+                // Checking if config exists, if not creating one with default values
+                if (!file.exists()) {
+                        file.getParentFile().mkdirs();
+                        MegaReports.getInstance().saveResource(filename, false);
+                }
+
+                return file;
+        }
+
+        public static class Config {
+                public static Integer COOLDOWN;
+
+                public static void init() {
+                        COOLDOWN = YMLLoader.getConfig().getInt("cooldown");
+                }
+        }
+
+
+        public static class Messages {
+                public static String PREFIX;
+                public static String COOLDOWN;
+
+                public static void init() {
+                        PREFIX = Common.colorize(YMLLoader.getMessages().getString("prefix"));
+                        COOLDOWN = Common.colorize(YMLLoader.getMessages().getString("cooldown"));
+                }
+        }
+}

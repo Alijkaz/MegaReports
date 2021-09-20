@@ -1,10 +1,13 @@
 package ir.jeykey.megareports.utils;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class Common {
         public static String colorize(String string) {
@@ -38,11 +41,9 @@ public class Common {
         }
 
         public static void send(CommandSender sender, String string, boolean addPrefix) {
-
                 string = colorize(string);
 
-                if (addPrefix)
-                        string = Config.PREFIX + string;
+                if (addPrefix) string = YMLLoader.Messages.PREFIX + string;
 
                 sender.sendMessage(string);
         }
