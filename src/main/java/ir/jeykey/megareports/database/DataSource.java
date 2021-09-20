@@ -33,11 +33,11 @@ public class DataSource {
 
                 connection = ds.getConnection();
 
-                ReportsDB.createTables();
+                ReportsDB.createTables(false);
         }
 
         public static void MySQL() throws SQLException {
-                config.setJdbcUrl("jdbc:mysql://" + YMLLoader.Config.MYSQL_HOST + ":" + YMLLoader.Config.MYSQL_PORT + "/megareports");
+                config.setJdbcUrl("jdbc:mysql://" + YMLLoader.Config.MYSQL_HOST + ":" + YMLLoader.Config.MYSQL_PORT + "/megareports?useSSL=false");
                 config.setUsername(YMLLoader.Config.MYSQL_USERNAME);
                 config.setPassword(YMLLoader.Config.MYSQL_PASSWORD);
                 config.setDriverClassName("com.mysql.jdbc.Driver");
@@ -49,7 +49,7 @@ public class DataSource {
 
                 connection = ds.getConnection();
 
-                ReportsDB.createTables();
+                ReportsDB.createTables(true);
         }
 
         public static Connection getConnection() {

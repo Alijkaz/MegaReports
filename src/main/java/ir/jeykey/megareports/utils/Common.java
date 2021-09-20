@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
@@ -20,12 +21,12 @@ public class Common {
                 return translatedStrings;
         }
 
-        public static void log(String message) {
-                Bukkit.getServer().getConsoleSender().sendMessage(colorize(message));
-        }
-
         public static void log(String... messages) {
                 Bukkit.getServer().getConsoleSender().sendMessage(colorize(messages));
+        }
+
+        public static void logPrefixed(String ... messages) {
+                for(String message : messages) log(YMLLoader.Messages.PREFIX + message);
         }
 
         public static String repeat(String string, int amount) {

@@ -1,5 +1,6 @@
 package ir.jeykey.megareports;
 
+import com.zaxxer.hikari.pool.HikariPool;
 import ir.jeykey.megareports.commands.ReportCommand;
 import ir.jeykey.megareports.database.DataSource;
 import ir.jeykey.megareports.events.PlayerQuit;
@@ -29,7 +30,7 @@ public final class MegaReports extends JavaPlugin {
                 try {
                         YMLLoader.load();
                 } catch(IOException|InvalidConfigurationException exception) {
-                        disablePlugin(
+                        disablePlugin(true,
                                 "&cFailed to load config file. Please check config directory/file permissions",
                                 "*vIf you believe this problem is from our plugin please contact development team",
                                 "&cReason: &4" + exception.getMessage()
@@ -43,29 +44,19 @@ public final class MegaReports extends JavaPlugin {
                         } else if (YMLLoader.Config.STORAGE.equalsIgnoreCase("mysql")) {
                                 DataSource.MySQL();
                         } else {
-                                disablePlugin(
-                                        "&cStorage type defined in config (" + YMLLoader.Config.STORAGE + ") is not valid!"
-                                );
+                                disablePlugin(true, "&cStorage type defined in config (" + YMLLoader.Config.STORAGE + ") is not valid!");
+                                return;
                         }
-                } catch (SQLException exception) {
-                        disablePlugin(
-                                "&cPlugin could not connect to storage, Please check your database information!",
-                                "&cStack Trace:",
-                                exception.getStackTrace().toString()
-                        );
-
-                } catch (IOException exception) {
-                        disablePlugin(
-                                "&cPlugin is unable to create database file, Please check directory permissions",
-                                "&cStack Trace:",
-                                exception.getStackTrace().toString()
-                        );
+                } catch (SQLException|HikariPool.PoolInitializationException exception) {
+                        disablePlugin(true, "&cPlugin could not work with database! [ Check Stack Trace For More Information ]");
+                        return;
+                }
+                catch (IOException exception) {
+                        disablePlugin(true,"&cPlugin is unable to create database file, Please check directory permissions [ Check Stack Trace For More Information ]");
+                        return;
                 } catch (ClassNotFoundException exception) {
-                        disablePlugin(
-                                "&cIt seems that there's a problem with plugin and it could not be loaded, Please contact plugin developers",
-                                "&cStack Trace:",
-                                exception.getStackTrace().toString()
-                        );
+                        disablePlugin(true, "&cIt seems that there's a problem with plugin and it could not be loaded, Please contact plugin developers [ Check Stack Trace For More Information ]");
+                        return;
                 }
 
                 // Registering commands
@@ -100,8 +91,11 @@ public final class MegaReports extends JavaPlugin {
                 );
         }
 
-        private void disablePlugin(String... messages) {
-                Common.log(messages);
+        private void disablePlugin(boolean addPrefix, String... messages) {
+                if (addPrefix)
+                        Common.logPrefixed(messages);
+                else
+                        Common.log(messages);
                 Bukkit.getPluginManager().disablePlugin(instance);
         }
 
