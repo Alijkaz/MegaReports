@@ -1,6 +1,7 @@
 package ir.jeykey.megareports;
 
 import ir.jeykey.megareports.commands.ReportCommand;
+import ir.jeykey.megareports.database.DataSource;
 import ir.jeykey.megareports.events.PlayerQuit;
 import ir.jeykey.megareports.utils.Common;
 import ir.jeykey.megareports.utils.YMLLoader;
@@ -10,6 +11,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
 public final class MegaReports extends JavaPlugin {
@@ -27,13 +29,43 @@ public final class MegaReports extends JavaPlugin {
                 try {
                         YMLLoader.load();
                 } catch(IOException|InvalidConfigurationException exception) {
-                        Common.log(
+                        disablePlugin(
                                 "&cFailed to load config file. Please check config directory/file permissions",
                                 "*vIf you believe this problem is from our plugin please contact development team",
                                 "&cReason: &4" + exception.getMessage()
                         );
+                }
 
-                        Bukkit.getPluginManager().disablePlugin(instance);
+                // Setting up datasource
+                try {
+                        if (YMLLoader.Config.STORAGE.equalsIgnoreCase("sqlite")) {
+                                DataSource.SQLite();
+                        } else if (YMLLoader.Config.STORAGE.equalsIgnoreCase("mysql")) {
+                                DataSource.MySQL();
+                        } else {
+                                disablePlugin(
+                                        "&cStorage type defined in config (" + YMLLoader.Config.STORAGE + ") is not valid!"
+                                );
+                        }
+                } catch (SQLException exception) {
+                        disablePlugin(
+                                "&cPlugin could not connect to storage, Please check your database information!",
+                                "&cStack Trace:",
+                                exception.getStackTrace().toString()
+                        );
+
+                } catch (IOException exception) {
+                        disablePlugin(
+                                "&cPlugin is unable to create database file, Please check directory permissions",
+                                "&cStack Trace:",
+                                exception.getStackTrace().toString()
+                        );
+                } catch (ClassNotFoundException exception) {
+                        disablePlugin(
+                                "&cIt seems that there's a problem with plugin and it could not be loaded, Please contact plugin developers",
+                                "&cStack Trace:",
+                                exception.getStackTrace().toString()
+                        );
                 }
 
                 // Registering commands
@@ -67,4 +99,10 @@ public final class MegaReports extends JavaPlugin {
                         Common.repeat("&c&m=", 12, "&4")
                 );
         }
+
+        private void disablePlugin(String... messages) {
+                Common.log(messages);
+                Bukkit.getPluginManager().disablePlugin(instance);
+        }
+
 }
