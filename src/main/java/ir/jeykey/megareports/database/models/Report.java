@@ -93,7 +93,7 @@ public class Report {
                                 );
 
                                 embedObject.setThumbnail(YMLLoader.Config.EMBED_THUMBNAIL);
-                                
+
                                 webhook.addEmbed(embedObject);
 
                                 try {

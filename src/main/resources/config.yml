@@ -38,4 +38,4 @@ discord:
     title: "%reporter% has reported %target%"
     description: "**Reason:** %reason%"
     footer: "Powered by MegaReports"
-    thumbnail-url: "https://jeykey.ir/vectors/report.png"
+    thumbnail-url: "https://cdn.discordapp.com/attachments/889493853835497473/889502986353659944/report.png"
