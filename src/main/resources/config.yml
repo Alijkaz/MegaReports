@@ -1,21 +1,27 @@
 # Name of the server that plugin is running on ( useful for bungeecord or other proxies use )
 server: default
 
-# Storage type ( sqlite / mysql )
-storage: sqlite
-
-# MySQL login information ( needed just if storage type is mysql)
-mysql-username: your_username
-mysql-password: your_password
-mysql-database: your_database
-mysql-host: 127.0.0.1
-mysql-port: 3306
-
-# Is reason required in report command? (example: /report Alijk <reason>)
-reason-required: true
-
 # Cooldown for report command ( in seconds ) you can use -1 to disable cooldown
 cooldown: -1
+
+# Storage related options
+storage:
+  # Storage type ( sqlite / mysql )
+  type: sqlite
+  # MySQL login information ( needed just if storage type is mysql)
+  mysql:
+    username: your_username
+    password: your_password
+    database: your_database
+    host: 127.0.0.1
+    port: 3306
+
+# Options that are required to report
+report-requirements:
+  # Is reason required in report command? (example: /report Alijk <reason>)
+  reason: true
+  # Should we check if the target is online and then allow reporting?
+  online-target: true
 
 # Discord integration - By enabling this section you could get notified with a new message when a new report happens
 # Our integration does not need any 3rd party library,plugin ...
@@ -23,3 +29,13 @@ cooldown: -1
 discord:
   enable: false
   webhook-url: your_webhook_url
+  # You could customize title / description of embed message
+  # Placeholders:
+  #    - %reporter% = Username of the reporter
+  #    - %target% = Username of the player that get reported
+  #    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
+  embed:
+    title: "%reporter% has reported %target%"
+    description: "**Reason:** %reason%"
+    footer: "Powered by MegaReports"
+    thumbnail-url: "https://jeykey.ir/vectors/report.png"

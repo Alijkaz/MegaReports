@@ -71,25 +71,42 @@ public class YMLLoader {
                 public static Integer COOLDOWN;
                 public static String SERVER;
                 public static boolean REASON_REQUIRED;
+                public static boolean ONLINE_TARGET_REQUIRED;
 
                 public static boolean DISCORD_ENABLED;
                 public static String DISCORD_WEBHOOK;
+                public static String EMBED_TITLE;
+                public static String EMBED_DESCRIPTION;
+                public static String EMBED_FOOTER;
+                public static String EMBED_THUMBNAIL;
 
                 public static void init() {
-                        STORAGE = YMLLoader.getConfig().getString("storage").toLowerCase();
 
-                        MYSQL_USERNAME = YMLLoader.getConfig().getString("mysql-username");
-                        MYSQL_PASSWORD = YMLLoader.getConfig().getString("mysql-password");
-                        MYSQL_HOST = YMLLoader.getConfig().getString("mysql-host");
-                        MYSQL_DB = YMLLoader.getConfig().getString("mysql-database");
-                        MYSQL_PORT = YMLLoader.getConfig().getString("mysql-port");
+                        // Storage configurations
+                        STORAGE = YMLLoader.getConfig().getString("storage.type").toLowerCase();
 
+                        MYSQL_USERNAME = YMLLoader.getConfig().getString("storage.mysql.username");
+                        MYSQL_PASSWORD = YMLLoader.getConfig().getString("storage.mysql.password");
+                        MYSQL_HOST = YMLLoader.getConfig().getString("storage.mysql.host");
+                        MYSQL_DB = YMLLoader.getConfig().getString("storage.mysql.database");
+                        MYSQL_PORT = YMLLoader.getConfig().getString("storage.mysql.port");
+
+                        // Main plugin configurations
                         COOLDOWN = YMLLoader.getConfig().getInt("cooldown");
                         SERVER = YMLLoader.getConfig().getString("server");
-                        REASON_REQUIRED = YMLLoader.getConfig().getBoolean("reason-required");
 
+                        // Report Requirements Configurationss
+                        REASON_REQUIRED = YMLLoader.getConfig().getBoolean("report-requirements.reason");
+                        ONLINE_TARGET_REQUIRED = YMLLoader.getConfig().getBoolean("report-requirements.online-target");
+
+                        // Discord Related Configurations
                         DISCORD_ENABLED = YMLLoader.getConfig().getBoolean("discord.enable");
-                        DISCORD_WEBHOOK = YMLLoader.getConfig().getString("discord.webhook");
+                        DISCORD_WEBHOOK = YMLLoader.getConfig().getString("discord.webhook-url");
+
+                        EMBED_TITLE = YMLLoader.getConfig().getString("discord.embed.title");
+                        EMBED_DESCRIPTION = YMLLoader.getConfig().getString("discord.embed.description");
+                        EMBED_FOOTER = YMLLoader.getConfig().getString("discord.embed.footer");
+                        EMBED_THUMBNAIL = YMLLoader.getConfig().getString("discord.embed.thumbnail-url");
                 }
         }
 

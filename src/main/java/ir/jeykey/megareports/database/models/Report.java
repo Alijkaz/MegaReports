@@ -66,13 +66,34 @@ public class Report {
                                 DiscordWebhook.EmbedObject embedObject = new DiscordWebhook.EmbedObject();
 
                                 embedObject.setColor(Color.GREEN);
-                                embedObject.setTitle(getReporter() + " has reported" + getTarget());
-                                embedObject.setDescription("Reason: " + getReason());
+                                embedObject.setTitle(
+                                        YMLLoader.Config.EMBED_TITLE
+                                                .replace("%reporter%", getReporter())
+                                                .replace("%target%", getTarget())
+                                                .replace("%reason%", getReason())
+                                );
+
+                                embedObject.setDescription(
+                                        YMLLoader.Config.EMBED_DESCRIPTION
+                                                .replace("%reporter%", getReporter())
+                                                .replace("%target%", getTarget())
+                                                .replace("%reason%", getReason())
+                                );
 
                                 embedObject.addField("Server:", getServer(), false);
                                 embedObject.addField("World:", location.getWorld().getName(), false);
                                 embedObject.addField("Reported At:", Common.getBeautifiedDt(), false);
 
+                                embedObject.setFooter(
+                                        YMLLoader.Config.EMBED_FOOTER
+                                                .replace("%reporter%", getReporter())
+                                                .replace("%target%", getTarget())
+                                                .replace("%reason%", getReason()),
+                                        null
+                                );
+
+                                embedObject.setThumbnail(YMLLoader.Config.EMBED_THUMBNAIL);
+                                
                                 webhook.addEmbed(embedObject);
 
                                 try {

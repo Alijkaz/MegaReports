@@ -52,7 +52,9 @@ public class ReportCommand implements CommandExecutor {
                 String target = args[0];
 
                 // Getting rest of args as reason
-                String reason = String.join(" ", new LinkedList<String>(Arrays.asList(args)));
+                LinkedList<String> argsCopy = new LinkedList<String>(Arrays.asList(args));
+                argsCopy.removeFirst();
+                String reason = String.join(" ", argsCopy);
 
                 // Creating report model
                 Report report = new Report(p.getName(), target, reason, p.getLocation());
