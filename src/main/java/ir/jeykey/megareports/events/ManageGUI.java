@@ -26,7 +26,6 @@ public class ManageGUI implements Listener {
                 Inventory gui = Bukkit.createInventory(null, 45, Common.colorize("&cReports Management"));
 
                 for (Report report: Report.all()) {
-
                         ItemStack reportItem = Common.createItem(
                                 Material.SAND,
                                 "&4&l#" + report.getId() + " &cReport " + report.getTarget(),
@@ -34,7 +33,11 @@ public class ManageGUI implements Listener {
                                 "&cServer: &4" + report.getServer(),
                                 "&cReporter: &4" + report.getReporter(),
                                 "&cTarget: &4" + report.getTarget(),
-                                "&cReported At: &4" + report.getReportedAt()
+                                "&cWorld: &4" + report.getLocation().getWorld().getName(),
+                                "&cXYZ: &4" + Math.round(report.getLocation().getX()) + "," + Math.round(report.getLocation().getY()) + "," + Math.round(report.getLocation().getZ()),
+                                "&cReported At: &4" + report.getReportedAt(),
+                                "",
+                                "&4&l[ &cCLICK TO MANAGE &4&l]"
                         );
 
                         gui.addItem(
@@ -68,7 +71,7 @@ public class ManageGUI implements Listener {
 
                 // Using slots click is a best option for your inventory click's
                 Common.send(p, "&cYou opened report id " + reportId);
-                
+
                 // TODO open specific report management gui after clicking on any report so that user can moderate/close report
         }
 }
