@@ -60,13 +60,16 @@ public class YMLLoader {
         }
 
         public static class Config {
-                public static Integer COOLDOWN;
                 public static String STORAGE;
+
                 public static String MYSQL_USERNAME;
                 public static String MYSQL_PASSWORD;
                 public static String MYSQL_HOST;
                 public static String MYSQL_DB;
                 public static String MYSQL_PORT;
+
+                public static Integer COOLDOWN;
+                public static String SERVER;
 
                 public static void init() {
                         STORAGE = YMLLoader.getConfig().getString("storage").toLowerCase();
@@ -78,6 +81,7 @@ public class YMLLoader {
                         MYSQL_PORT = YMLLoader.getConfig().getString("mysql-port");
 
                         COOLDOWN = YMLLoader.getConfig().getInt("cooldown");
+                        SERVER = YMLLoader.getConfig().getString("server");
                 }
         }
 

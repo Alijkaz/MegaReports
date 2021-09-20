@@ -1,3 +1,6 @@
+# Name of the server that plugin is running on ( useful for bungeecord or other proxies use )
+server: default
+
 # Storage type ( sqlite / mysql )
 storage: sqlite
 
