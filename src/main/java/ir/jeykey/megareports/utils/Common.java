@@ -2,8 +2,14 @@ package ir.jeykey.megareports.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.SkullType;
 import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -50,5 +56,31 @@ public class Common {
                 SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
                 Date date = new Date(System.currentTimeMillis());
                 return formatter.format(date);
+        }
+
+
+        public static Date timestampToDate(Long timestamp) {
+                Timestamp ts=new Timestamp(timestamp);
+                return new Date(ts.getTime());
+        }
+
+        /**
+         * This method is used to create ItemStack with custom name and meta
+         * @param material Material Item/Block
+         * @param name Custom name
+         * @param lore Custom lore
+         * @return Built ItemStack
+         */
+        public static ItemStack createItem(final Material material, final String name, final String... lore) {
+                final ItemStack item = new ItemStack(material, 1);
+                final ItemMeta meta = item.getItemMeta();
+
+                meta.setDisplayName(Common.colorize(name));
+
+                meta.setLore(Arrays.asList(Common.colorize(lore)));
+
+                item.setItemMeta(meta);
+
+                return item;
         }
 }

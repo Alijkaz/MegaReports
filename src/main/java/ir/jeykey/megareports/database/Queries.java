@@ -2,6 +2,7 @@ package ir.jeykey.megareports.database;
 
 public class Queries {
         public static String INSERT_REPORT = "INSERT INTO megareports_reports (reporter, target, reason, location, server, reported_at) VALUES (?, ?, ?, ?, ?, ?)";
+        public static String SELECT_ALL_REPORTS = "SELECT * FROM megareports_reports";
         public static String CREATE_REPORTS_TABLE = "CREATE TABLE IF NOT EXISTS megareports_reports (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "reporter VARCHAR(16) NOT NULL," +

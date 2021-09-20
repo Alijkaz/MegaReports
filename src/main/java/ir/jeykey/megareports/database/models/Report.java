@@ -11,20 +11,31 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.HumanEntity;
 
 import java.awt.*;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Report {
+        @Setter @Getter private Integer id;
         @Setter @Getter private String reporter;
         @Setter @Getter private String target;
         @Setter @Getter private String reason;
         @Setter @Getter private Location location;
         @Setter @Getter private String server;
         @Setter @Getter private Long reportedAt;
+        @Setter @Getter private Long reportedClosedAt;
+
+        public Report(int id) {
+                setId(id);
+        }
 
         public Report(String reporter, String target, String reason, Location loc) {
                 setReporter(reporter);
@@ -33,7 +44,7 @@ public class Report {
                 setLocation(loc);
         }
 
-        public Report save() {
+        public void save() {
                 setReportedAt(Instant.now().getEpochSecond());
                 setServer(YMLLoader.Config.SERVER);
 
@@ -53,8 +64,42 @@ public class Report {
                 // Sending notification to discord if enabled in config
                 if (YMLLoader.Config.DISCORD_ENABLED)
                         this.notifyDiscord();
+        }
 
-                return this;
+        public static List<Report> all() {
+
+                List<Report> reports = new ArrayList<>();
+
+                try {
+                        Connection con = DataSource.getConnection();
+                        PreparedStatement pst = con.prepareStatement(Queries.SELECT_ALL_REPORTS);
+                        ResultSet rs = pst.executeQuery();
+                        reports = new ArrayList<>();
+                        Report report;
+                        while (rs.next()) {
+                                Integer id = rs.getInt("id");
+                                String reporter = rs.getString("reporter");
+                                String target = rs.getString("target");
+                                String reason = rs.getString("reason");
+                                String server = rs.getString("server");
+                                Long reportedAt = rs.getLong("reported_at");
+                                Long reportedClosedAt = rs.getLong("report_closed_at");
+                                Location location = Serialization.deserializeLocation(rs.getString("location"));
+
+                                report = new Report(reporter, target, reason, location);
+
+                                report.setId(id);
+                                report.setServer(server);
+                                report.setReportedAt(reportedAt);
+                                report.setReportedClosedAt(reportedClosedAt);
+
+                                reports.add(report);
+                        }
+                } catch (SQLException exception) {
+                        exception.printStackTrace();
+                }
+
+                return reports;
         }
 
 
