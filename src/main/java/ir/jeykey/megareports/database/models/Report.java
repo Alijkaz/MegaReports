@@ -15,10 +15,7 @@ import org.bukkit.entity.HumanEntity;
 
 import java.awt.*;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +27,8 @@ public class Report {
         @Setter @Getter private String reason;
         @Setter @Getter private Location location;
         @Setter @Getter private String server;
-        @Setter @Getter private Long reportedAt;
-        @Setter @Getter private Long reportedClosedAt;
+        @Setter @Getter private String reportedAt;
+        @Setter @Getter private String reportedClosedAt;
 
         public Report(int id) {
                 setId(id);
@@ -45,7 +42,6 @@ public class Report {
         }
 
         public void save() {
-                setReportedAt(Instant.now().getEpochSecond());
                 setServer(YMLLoader.Config.SERVER);
 
                 try {
@@ -55,7 +51,6 @@ public class Report {
                         pst.setString(3, getReason());
                         pst.setString(4, Serialization.serializeLocation(getLocation()));
                         pst.setString(5, getServer());
-                        pst.setLong(6, getReportedAt());
                         DataSource.executeQueryAsync(pst);
                 } catch (SQLException exception) {
                         exception.printStackTrace();
@@ -82,8 +77,8 @@ public class Report {
                                 String target = rs.getString("target");
                                 String reason = rs.getString("reason");
                                 String server = rs.getString("server");
-                                Long reportedAt = rs.getLong("reported_at");
-                                Long reportedClosedAt = rs.getLong("report_closed_at");
+                                String reportedAt = rs.getString("reported_at");
+                                String reportedClosedAt = rs.getString("report_closed_at");
                                 Location location = Serialization.deserializeLocation(rs.getString("location"));
 
                                 report = new Report(reporter, target, reason, location);

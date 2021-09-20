@@ -34,7 +34,7 @@ public class ManageGUI implements Listener {
                                 "&cServer: &4" + report.getServer(),
                                 "&cReporter: &4" + report.getReporter(),
                                 "&cTarget: &4" + report.getTarget(),
-                                "&cReported At: &4" + Common.timestampToDate(report.getReportedAt())
+                                "&cReported At: &4" + report.getReportedAt()
                         );
 
                         gui.addItem(
@@ -56,10 +56,11 @@ public class ManageGUI implements Listener {
                 e.setCancelled(true);
 
                 final ItemStack clickedItem = e.getCurrentItem();
-                final String clickedItemName = clickedItem.getItemMeta().getDisplayName();
 
                 // verify current item is not null
                 if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
+
+                final String clickedItemName = clickedItem.getItemMeta().getDisplayName();
 
                 final Player p = (Player) e.getWhoClicked();
 

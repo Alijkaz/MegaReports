@@ -58,12 +58,6 @@ public class Common {
                 return formatter.format(date);
         }
 
-
-        public static Date timestampToDate(Long timestamp) {
-                Timestamp ts=new Timestamp(timestamp);
-                return new Date(ts.getTime());
-        }
-
         /**
          * This method is used to create ItemStack with custom name and meta
          * @param material Material Item/Block
