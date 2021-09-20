@@ -65,6 +65,7 @@ public class YMLLoader {
                 public static String MYSQL_USERNAME;
                 public static String MYSQL_PASSWORD;
                 public static String MYSQL_HOST;
+                public static String MYSQL_DB;
                 public static String MYSQL_PORT;
 
                 public static void init() {
@@ -73,6 +74,7 @@ public class YMLLoader {
                         MYSQL_USERNAME = YMLLoader.getConfig().getString("mysql-username");
                         MYSQL_PASSWORD = YMLLoader.getConfig().getString("mysql-password");
                         MYSQL_HOST = YMLLoader.getConfig().getString("mysql-host");
+                        MYSQL_DB = YMLLoader.getConfig().getString("mysql-database");
                         MYSQL_PORT = YMLLoader.getConfig().getString("mysql-port");
 
                         COOLDOWN = YMLLoader.getConfig().getInt("cooldown");

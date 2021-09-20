@@ -4,6 +4,7 @@ storage: sqlite
 # MySQL login information ( needed just if storage type is mysql)
 mysql-username: your_username
 mysql-password: your_password
+mysql-database: your_database
 mysql-host: 127.0.0.1
 mysql-port: 3306
 
