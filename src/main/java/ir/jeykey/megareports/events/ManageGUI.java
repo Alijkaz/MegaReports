@@ -68,5 +68,7 @@ public class ManageGUI implements Listener {
 
                 // Using slots click is a best option for your inventory click's
                 Common.send(p, "&cYou opened report id " + reportId);
+                
+                // TODO open specific report management gui after clicking on any report so that user can moderate/close report
         }
 }
