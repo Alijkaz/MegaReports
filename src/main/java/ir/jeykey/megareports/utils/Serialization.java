@@ -13,7 +13,7 @@ public class Serialization {
          * @return Serialized location string
          */
         public static String serializeLocation(Location location) {
-                return location.getWorld() + "," + location.getX() + "," + location.getY() + "," + location.getZ() + ","  + location.getYaw() + "," + location.getPitch();
+                return location.getWorld().getName() + "," + location.getX() + "," + location.getY() + "," + location.getZ() + ","  + location.getYaw() + "," + location.getPitch();
         }
 
         /**

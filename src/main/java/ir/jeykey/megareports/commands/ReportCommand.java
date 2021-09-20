@@ -1,5 +1,6 @@
 package ir.jeykey.megareports.commands;
 
+import ir.jeykey.megareports.database.models.Report;
 import ir.jeykey.megareports.utils.Common;
 import ir.jeykey.megareports.utils.Cooldown;
 import ir.jeykey.megareports.utils.YMLLoader;
@@ -9,6 +10,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ReportCommand implements CommandExecutor {
         @Override
@@ -20,6 +25,16 @@ public class ReportCommand implements CommandExecutor {
                 }
 
                 Player p = (Player) sender;
+
+                if (args.length < 1) {
+                        Common.send(sender, YMLLoader.Messages.MISSING_TARGET.replace("%reporter%", p.getName()), true);
+                        return true;
+                } else if (args.length == 1) {
+                        if (YMLLoader.Config.REASON_REQUIRED) {
+                                Common.send(sender, YMLLoader.Messages.MISSING_REASON.replace("%reporter%", p.getName()), true);
+                                return true;
+                        }
+                }
 
                 if (YMLLoader.Config.COOLDOWN != -1) {
                         if (Cooldown.isCooldown(p.getUniqueId())) {
@@ -33,7 +48,27 @@ public class ReportCommand implements CommandExecutor {
                         }
                 }
 
-                Common.send(sender, "Hale");
+                // Getting target
+                String target = args[0];
+
+                // Getting rest of args as reason
+                String reason = String.join(" ", new LinkedList<String>(Arrays.asList(args)));
+
+                // Creating report model
+                Report report = new Report(p.getName(), target, reason, p.getLocation());
+
+                // Saving report to database
+                report.save();
+
+                // Sending successful
+                Common.send(
+                        sender,
+                        YMLLoader.Messages.SUCCESSFUL
+                                .replace("%reporter%", p.getName())
+                                .replace("%target%", target)
+                                .replace("%reason%", reason)
+                        , true
+                );
 
                 return true;
         }

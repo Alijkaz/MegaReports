@@ -4,4 +4,21 @@ prefix: "&4[&cMegaReports&4] "
 # You're on cooldown message
 # Placeholders:
 #    - %seconds% = to show cooldown seconds
-cooldown: "You're on cooldown, please try again in %seconds% seconds!"
+cooldown: "&cYou're on cooldown, please try again in &4%seconds% &cseconds!"
+
+# Successful report message
+# Placeholders:
+#    - %reporter% = Username of the reporter
+#    - %target% = Username of the player that get reported
+#    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
+successful: "&aYou've reported &c&l%target%&a, Our team will review your report ASAP!"
+
+# Missing target ( /report <target> ) message
+# Placeholders:
+#    - %reporter% = Username of the reporter
+missing-target: "&c%reporter%, Please specify your &4target &cafter /report command"
+
+# Missing reason ( /report <target> <reason> ) message
+# Placeholders:
+#    - %reporter% = Username of the reporter
+missing-reason: "&c%reporter%, Please specify your &4reason &cin the end of report command"

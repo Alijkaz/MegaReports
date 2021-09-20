@@ -1,6 +1,8 @@
 package ir.jeykey.megareports;
 
 import com.zaxxer.hikari.pool.HikariPool;
+import ir.jeykey.megareports.commands.MainCommand;
+import ir.jeykey.megareports.commands.ManageCommand;
 import ir.jeykey.megareports.commands.ReportCommand;
 import ir.jeykey.megareports.database.DataSource;
 import ir.jeykey.megareports.events.PlayerQuit;
@@ -13,7 +15,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.concurrent.TimeUnit;
 
 public final class MegaReports extends JavaPlugin {
         @Getter public static MegaReports instance;
@@ -61,6 +62,8 @@ public final class MegaReports extends JavaPlugin {
 
                 // Registering commands
                 getCommand("report").setExecutor(new ReportCommand());
+                getCommand("megareports").setExecutor(new MainCommand());
+                getCommand("reports").setExecutor(new ManageCommand());
 
                 // Registering events
                 Bukkit.getPluginManager().registerEvents(new PlayerQuit(), instance);

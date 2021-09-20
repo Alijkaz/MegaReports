@@ -8,3 +8,9 @@ commands:
   report:
     description: Report a player
     usage: /<command>
+  megareports:
+    description: MegaReports plugin main command
+    usage: /<command>
+  reports:
+    description: Managing reports
+    usage: /<command>

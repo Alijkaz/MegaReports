@@ -70,6 +70,7 @@ public class YMLLoader {
 
                 public static Integer COOLDOWN;
                 public static String SERVER;
+                public static boolean REASON_REQUIRED;
 
                 public static void init() {
                         STORAGE = YMLLoader.getConfig().getString("storage").toLowerCase();
@@ -82,6 +83,7 @@ public class YMLLoader {
 
                         COOLDOWN = YMLLoader.getConfig().getInt("cooldown");
                         SERVER = YMLLoader.getConfig().getString("server");
+                        REASON_REQUIRED = YMLLoader.getConfig().getBoolean("reason-required");
                 }
         }
 
@@ -89,10 +91,17 @@ public class YMLLoader {
         public static class Messages {
                 public static String PREFIX;
                 public static String COOLDOWN;
+                public static String SUCCESSFUL;
+                public static String MISSING_TARGET;
+                public static String MISSING_REASON;
 
                 public static void init() {
                         PREFIX = Common.colorize(YMLLoader.getMessages().getString("prefix"));
                         COOLDOWN = Common.colorize(YMLLoader.getMessages().getString("cooldown"));
+                        SUCCESSFUL = Common.colorize(YMLLoader.getMessages().getString("successful"));
+                        MISSING_TARGET = Common.colorize(YMLLoader.getMessages().getString("missing-target"));
+                        MISSING_REASON = Common.colorize(YMLLoader.getMessages().getString("missing-reason"));
+
                 }
         }
 }

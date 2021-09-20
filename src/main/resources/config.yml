@@ -11,5 +11,8 @@ mysql-database: your_database
 mysql-host: 127.0.0.1
 mysql-port: 3306
 
+# Is reason required in report command? (example: /report Alijk <reason>)
+reason-required: true
+
 # Cooldown for report command ( in seconds ) you can use -1 to disable cooldown
 cooldown: -1
