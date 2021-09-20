@@ -72,6 +72,9 @@ public class YMLLoader {
                 public static String SERVER;
                 public static boolean REASON_REQUIRED;
 
+                public static boolean DISCORD_ENABLED;
+                public static String DISCORD_WEBHOOK;
+
                 public static void init() {
                         STORAGE = YMLLoader.getConfig().getString("storage").toLowerCase();
 
@@ -84,6 +87,9 @@ public class YMLLoader {
                         COOLDOWN = YMLLoader.getConfig().getInt("cooldown");
                         SERVER = YMLLoader.getConfig().getString("server");
                         REASON_REQUIRED = YMLLoader.getConfig().getBoolean("reason-required");
+
+                        DISCORD_ENABLED = YMLLoader.getConfig().getBoolean("discord.enable");
+                        DISCORD_WEBHOOK = YMLLoader.getConfig().getString("discord.webhook");
                 }
         }
 

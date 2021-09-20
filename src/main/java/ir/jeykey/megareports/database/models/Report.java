@@ -1,13 +1,19 @@
 package ir.jeykey.megareports.database.models;
 
+import ir.jeykey.megareports.MegaReports;
 import ir.jeykey.megareports.database.DataSource;
 import ir.jeykey.megareports.database.Queries;
+import ir.jeykey.megareports.utils.Common;
+import ir.jeykey.megareports.utils.DiscordWebhook;
 import ir.jeykey.megareports.utils.Serialization;
 import ir.jeykey.megareports.utils.YMLLoader;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+import java.awt.*;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -44,7 +50,39 @@ public class Report {
                         exception.printStackTrace();
                 }
 
+                // Sending notification to discord if enabled in config
+                if (YMLLoader.Config.DISCORD_ENABLED)
+                        this.notifyDiscord();
+
                 return this;
+        }
+
+
+        private void notifyDiscord() {
+                Bukkit.getScheduler().runTaskAsynchronously(MegaReports.getInstance(), new Runnable() {
+                        @Override
+                        public void run() {
+                                DiscordWebhook webhook = new DiscordWebhook(YMLLoader.Config.DISCORD_WEBHOOK);
+                                DiscordWebhook.EmbedObject embedObject = new DiscordWebhook.EmbedObject();
+
+                                embedObject.setColor(Color.GREEN);
+                                embedObject.setTitle(getReporter() + " has reported" + getTarget());
+                                embedObject.setDescription("Reason: " + getReason());
+
+                                embedObject.addField("Server:", getServer(), false);
+                                embedObject.addField("World:", location.getWorld().getName(), false);
+                                embedObject.addField("Reported At:", Common.getBeautifiedDt(), false);
+
+                                webhook.addEmbed(embedObject);
+
+                                try {
+                                        webhook.execute();
+                                } catch (IOException exception) {
+                                        Common.logPrefixed("&cFailed to send webhook notification, please check your network connectivity!", "&cStack Trace:");
+                                        exception.printStackTrace();
+                                }
+                        }
+                });
         }
 
 }

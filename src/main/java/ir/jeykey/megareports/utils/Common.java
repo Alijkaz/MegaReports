@@ -1,14 +1,11 @@
 package ir.jeykey.megareports.utils;
 
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class Common {
         public static String colorize(String string) {
@@ -47,5 +44,11 @@ public class Common {
                 if (addPrefix) string = YMLLoader.Messages.PREFIX + string;
 
                 sender.sendMessage(string);
+        }
+
+        public static String getBeautifiedDt() {
+                SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+                Date date = new Date(System.currentTimeMillis());
+                return formatter.format(date);
         }
 }

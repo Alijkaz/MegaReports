@@ -16,3 +16,10 @@ reason-required: true
 
 # Cooldown for report command ( in seconds ) you can use -1 to disable cooldown
 cooldown: -1
+
+# Discord integration - By enabling this section you could get notified with a new message when a new report happens
+# Our integration does not need any 3rd party library,plugin ...
+# Just easily create a new webhook for the channel you want and paste it here, We'll do the rest
+discord:
+  enable: false
+  webhook-url: your_webhook_url
