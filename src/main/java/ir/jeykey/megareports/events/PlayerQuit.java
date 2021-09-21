@@ -11,5 +11,8 @@ public class PlayerQuit implements Listener {
                 // Removing player from cooldown hashmap on quit
                 Cooldown.cooldown.remove(e.getPlayer().getUniqueId());
 
+                // Removing player from report reasoning hashmap on quit
+                ManageReportGUI.WAITING_CLOSE_REASON.remove(e.getPlayer());
+
         }
 }

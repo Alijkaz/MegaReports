@@ -5,7 +5,8 @@ import ir.jeykey.megareports.commands.MainCommand;
 import ir.jeykey.megareports.commands.ManageCommand;
 import ir.jeykey.megareports.commands.ReportCommand;
 import ir.jeykey.megareports.database.DataSource;
-import ir.jeykey.megareports.events.ManageGUI;
+import ir.jeykey.megareports.events.ManageReportGUI;
+import ir.jeykey.megareports.events.ReportsGUI;
 import ir.jeykey.megareports.events.PlayerQuit;
 import ir.jeykey.megareports.utils.Common;
 import ir.jeykey.megareports.utils.YMLLoader;
@@ -68,7 +69,8 @@ public final class MegaReports extends JavaPlugin {
 
                 // Registering events
                 Bukkit.getPluginManager().registerEvents(new PlayerQuit(), instance);
-                Bukkit.getPluginManager().registerEvents(new ManageGUI(), instance);
+                Bukkit.getPluginManager().registerEvents(new ReportsGUI(), instance);
+                Bukkit.getPluginManager().registerEvents(new ManageReportGUI(), instance);
 
                 // Finished loading plugin millis
                 long end = System.currentTimeMillis();

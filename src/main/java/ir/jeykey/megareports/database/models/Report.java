@@ -11,13 +11,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.HumanEntity;
 
 import java.awt.*;
 import java.io.IOException;
 import java.sql.*;
-import java.time.Instant;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Report {
@@ -25,10 +25,11 @@ public class Report {
         @Setter @Getter private String reporter;
         @Setter @Getter private String target;
         @Setter @Getter private String reason;
+        @Setter @Getter private String closedReason;
         @Setter @Getter private Location location;
         @Setter @Getter private String server;
-        @Setter @Getter private String reportedAt;
-        @Setter @Getter private String reportedClosedAt;
+        @Setter @Getter private String createdAt;
+        @Setter @Getter private String closedAt;
 
         public Report(int id) {
                 setId(id);
@@ -61,6 +62,79 @@ public class Report {
                         this.notifyDiscord();
         }
 
+        /**
+         * This method is used to find and load specific report using Report#id
+         */
+        public void load() {
+                try {
+                        Connection con = DataSource.getConnection();
+                        PreparedStatement pst = con.prepareStatement(Queries.SELECT_REPORT);
+                        pst.setInt(1, getId());
+                        ResultSet rs = pst.executeQuery();
+                        while (rs.next()) {
+                                Integer id = rs.getInt("id");
+                                String reporter = rs.getString("reporter");
+                                String target = rs.getString("target");
+                                String reason = rs.getString("reason");
+                                String closedReason = rs.getString("closed_reason");
+                                String server = rs.getString("server");
+                                String reportedAt = rs.getString("created_at");
+                                String reportedClosedAt = rs.getString("closed_at");
+                                Location location = Serialization.deserializeLocation(rs.getString("location"));
+
+                                setId(id);
+                                setReporter(reporter);
+                                setTarget(target);
+                                setReason(reason);
+                                setClosedReason(closedReason);
+                                setLocation(location);
+                                setServer(server);
+                                setCreatedAt(reportedAt);
+                                setClosedAt(reportedClosedAt);
+                        }
+                } catch (SQLException exception) {
+                        exception.printStackTrace();
+                }
+        }
+
+
+        public void close() {
+                try {
+                        PreparedStatement pst = DataSource.getConnection().prepareStatement(Queries.CLOSE_REPORT);
+                        pst.setString(1, new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime()));
+                        pst.setString(2, getClosedReason());
+                        pst.setInt(3, getId());
+                        DataSource.executeQueryAsync(pst);
+                } catch (SQLException exception) {
+                        exception.printStackTrace();
+                }
+        }
+
+        public void open() {
+                try {
+                        PreparedStatement pst = DataSource.getConnection().prepareStatement(Queries.OPEN_REPORT);
+                        pst.setInt(1, getId());
+                        DataSource.executeQueryAsync(pst);
+                } catch (SQLException exception) {
+                        exception.printStackTrace();
+                }
+        }
+
+        public void delete() {
+                try {
+                        PreparedStatement pst = DataSource.getConnection().prepareStatement(Queries.DELETE_REPORT);
+                        pst.setInt(1, getId());
+                        DataSource.executeQueryAsync(pst);
+                } catch (SQLException exception) {
+                        exception.printStackTrace();
+                }
+        }
+
+
+        /**
+         * This method is used to retrieve all the reports from database
+         * @return All the reports that are saved in database
+         */
         public static List<Report> all() {
 
                 List<Report> reports = new ArrayList<>();
@@ -76,17 +150,19 @@ public class Report {
                                 String reporter = rs.getString("reporter");
                                 String target = rs.getString("target");
                                 String reason = rs.getString("reason");
+                                String closedReason = rs.getString("closed_reason");
                                 String server = rs.getString("server");
-                                String reportedAt = rs.getString("reported_at");
-                                String reportedClosedAt = rs.getString("report_closed_at");
+                                String reportedAt = rs.getString("created_at");
+                                String reportedClosedAt = rs.getString("closed_at");
                                 Location location = Serialization.deserializeLocation(rs.getString("location"));
 
                                 report = new Report(reporter, target, reason, location);
 
                                 report.setId(id);
                                 report.setServer(server);
-                                report.setReportedAt(reportedAt);
-                                report.setReportedClosedAt(reportedClosedAt);
+                                report.setClosedReason(closedReason);
+                                report.setCreatedAt(reportedAt);
+                                report.setClosedAt(reportedClosedAt);
 
                                 reports.add(report);
                         }
