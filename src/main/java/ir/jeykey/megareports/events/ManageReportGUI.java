@@ -2,6 +2,7 @@ package ir.jeykey.megareports.events;
 
 import ir.jeykey.megareports.database.models.Report;
 import ir.jeykey.megareports.utils.Common;
+import ir.jeykey.megareports.utils.YMLLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -160,8 +161,7 @@ public class ManageReportGUI implements Listener {
                         Common.send(p, "&aYou have successfully opened report &c#" + report.getId());
                         p.closeInventory();
                 } else if (clickedItemName.equalsIgnoreCase(Common.colorize("&aTeleport"))) {
-                        p.teleport(report.getLocation());
-                        Common.send(p, "&aYou have successfully teleport to report &c#" + report.getId());
+                        report.teleport(p);
                         p.closeInventory();
                 } else if (clickedItemName.equalsIgnoreCase(Common.colorize("&cDelete Report"))) {
                         report.delete();

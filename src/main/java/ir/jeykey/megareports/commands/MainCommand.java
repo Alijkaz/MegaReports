@@ -19,18 +19,16 @@ public class MainCommand implements CommandExecutor {
                                 return true;
                         }
 
-                        switch(args[0]) {
-                                case "reload":
-                                        try {
-                                                YMLLoader.load();
-                                                Common.send(sender, "&aYou've fully re-loaded configuration files.");
-                                        } catch (IOException|InvalidConfigurationException exception) {
-                                                Common.send(sender, "&cYour config file is not valid and could not be loaded");
-                                                exception.printStackTrace();
-                                        }
-                                        break;
-                                default:
-                                        Common.send(sender, "&cEntered arg is invalid! Use help command.");
+                        if ("reload".equalsIgnoreCase(args[0])) {
+                                try {
+                                        YMLLoader.load();
+                                        Common.send(sender, "&aYou've fully re-loaded configuration files.");
+                                } catch (IOException | InvalidConfigurationException exception) {
+                                        Common.send(sender, "&cYour config file is not valid and could not be loaded");
+                                        exception.printStackTrace();
+                                }
+                        } else {
+                                Common.send(sender, "&cEntered arg is invalid! Use help command.");
                         }
                 } else {
                         Common.send(sender, "&aMegaReports plugin is the one and only report plugin you'll ever need.");

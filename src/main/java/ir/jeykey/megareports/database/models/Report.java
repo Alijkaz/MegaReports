@@ -3,6 +3,7 @@ package ir.jeykey.megareports.database.models;
 import ir.jeykey.megareports.MegaReports;
 import ir.jeykey.megareports.database.DataSource;
 import ir.jeykey.megareports.database.Queries;
+import ir.jeykey.megareports.events.MessageListener;
 import ir.jeykey.megareports.utils.Common;
 import ir.jeykey.megareports.utils.DiscordWebhook;
 import ir.jeykey.megareports.utils.Serialization;
@@ -11,11 +12,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -101,7 +104,7 @@ public class Report {
         public void close() {
                 try {
                         PreparedStatement pst = DataSource.getConnection().prepareStatement(Queries.CLOSE_REPORT);
-                        pst.setString(1, new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime()));
+                        pst.setDate(1, Date.valueOf(LocalDate.now()));
                         pst.setString(2, getClosedReason());
                         pst.setInt(3, getId());
                         DataSource.executeQueryAsync(pst);
@@ -127,6 +130,30 @@ public class Report {
                         DataSource.executeQueryAsync(pst);
                 } catch (SQLException exception) {
                         exception.printStackTrace();
+                }
+        }
+
+        public void teleport(Player p) {
+                if (!getServer().equalsIgnoreCase(YMLLoader.Config.SERVER) && YMLLoader.Config.BUNGEECORD) {
+                        MessageListener.sendPlayerTo(p, getServer());
+                        MessageListener.teleportPlayerTo(p, this);
+                        Common.send(
+                                p,
+                                YMLLoader.Messages.TELEPORT_CROSS_SERVER
+                                        .replace("%from%", YMLLoader.Config.SERVER)
+                                        .replace("%to%", getServer())
+                        );
+                } else {
+                        for (String cmd: YMLLoader.Config.TELEPORT_COMMANDS)
+                                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd.replace("%player%", p.getName()));
+
+                        p.teleport(getLocation());
+
+                        Common.send(
+                                p,
+                                YMLLoader.Messages.TELEPORT
+                                        .replace("%id%", getId().toString())
+                        );
                 }
         }
 
@@ -208,7 +235,11 @@ public class Report {
                                         null
                                 );
 
-                                embedObject.setThumbnail(YMLLoader.Config.EMBED_THUMBNAIL);
+                                embedObject.setThumbnail(
+                                        YMLLoader.Config.EMBED_THUMBNAIL
+                                                .replace("%reporter%", getReporter())
+                                                .replace("%target%", getTarget())
+                                );
 
                                 webhook.addEmbed(embedObject);
 

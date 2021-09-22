@@ -1,8 +1,11 @@
-# Name of the server that plugin is running on ( useful for bungeecord or other proxies use )
+# Name of the server that plugin is running on ( useful for bungeecord or other proxies use - use VALID BungeeCord server name )
 server: default
 
 # Cooldown for report command ( in seconds ) you can use -1 to disable cooldown
 cooldown: -1
+
+# Specifies that if plugin is running on BungeeCord mode ( if it is, teleporting to report system would send you to specific server )
+bungeecord: false
 
 # Storage related options
 storage:
@@ -23,6 +26,12 @@ report-requirements:
   # Should we check if the target is online and then allow reporting?
   online-target: true
 
+# Commands that will be executed on player before teleporting to report location
+  # Placeholders:
+  #    - %player% = Username of the player
+teleport-commands:
+  - "vanish %player%"
+
 # Discord integration - By enabling this section you could get notified with a new message when a new report happens
 # Our integration does not need any 3rd party library,plugin ...
 # Just easily create a new webhook for the channel you want and paste it here, We'll do the rest
@@ -35,7 +44,7 @@ discord:
   #    - %target% = Username of the player that get reported
   #    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
   embed:
-    title: "%reporter% has reported %target%"
+    title: ":warning: %reporter% has reported %target%"
     description: "**Reason:** %reason%"
     footer: "Powered by MegaReports"
-    thumbnail-url: "https://cdn.discordapp.com/attachments/889493853835497473/889502986353659944/report.png"
+    thumbnail-url: "https://cravatar.eu/avatar/%target%/64.png"

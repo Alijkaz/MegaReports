@@ -13,12 +13,36 @@ cooldown: "&cYou're on cooldown, please try again in &4%seconds% &cseconds!"
 #    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
 successful: "&aYou've reported &c&l%target%&a, Our team will review your report ASAP!"
 
+# Staff notification report message
+# Placeholders:
+#    - %reporter% = Username of the reporter
+#    - %target% = Username of the player that get reported
+#    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
+notification: "&cNew report has been arrived! &4%reporter% &creported &4%target% &cfor &4%reason%"
+
 # Missing target ( /report <target> ) message
 # Placeholders:
 #    - %reporter% = Username of the reporter
 missing-target: "&c%reporter%, Please specify your &4target &cafter /report command"
 
+# Missing *online* target message
+# Placeholders:
+#    - %reporter% = Username of the reporter
+#    - %target% = Username of the target
+missing-online-target: "&c%reporter%, %target% is not online now and you can't report him!"
+
 # Missing reason ( /report <target> <reason> ) message
 # Placeholders:
 #    - %reporter% = Username of the reporter
 missing-reason: "&c%reporter%, Please specify your &4reason &cin the end of report command"
+
+# Teleported to report message
+# Placeholders:
+#    - %id% = Id of that specific report
+teleport-succesful: "&aYou have successfully teleport to report &c#%id%"
+
+# Sending user to another server to teleport to report location message
+# Placeholders:
+#    - %from% = From server name
+#    - %to% = To server name
+teleport-another-server: "&aSending you to %to% to teleport to report"

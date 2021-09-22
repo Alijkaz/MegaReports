@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 // ------------------------------------
 //       Handling Config Files
@@ -70,6 +71,9 @@ public class YMLLoader {
 
                 public static Integer COOLDOWN;
                 public static String SERVER;
+                public static boolean BUNGEECORD;
+                public static List<String> TELEPORT_COMMANDS;
+
                 public static boolean REASON_REQUIRED;
                 public static boolean ONLINE_TARGET_REQUIRED;
 
@@ -94,6 +98,8 @@ public class YMLLoader {
                         // Main plugin configurations
                         COOLDOWN = YMLLoader.getConfig().getInt("cooldown");
                         SERVER = YMLLoader.getConfig().getString("server");
+                        BUNGEECORD = YMLLoader.getConfig().getBoolean("bungeecord");
+                        TELEPORT_COMMANDS = YMLLoader.getConfig().getStringList("teleport-commands");
 
                         // Report Requirements Configurationss
                         REASON_REQUIRED = YMLLoader.getConfig().getBoolean("report-requirements.reason");
@@ -115,15 +121,23 @@ public class YMLLoader {
                 public static String PREFIX;
                 public static String COOLDOWN;
                 public static String SUCCESSFUL;
+                public static String NOTIFICATION;
                 public static String MISSING_TARGET;
+                public static String MISSING_ONLINE_TARGET;
                 public static String MISSING_REASON;
+                public static String TELEPORT;
+                public static String TELEPORT_CROSS_SERVER;
 
                 public static void init() {
                         PREFIX = Common.colorize(YMLLoader.getMessages().getString("prefix"));
                         COOLDOWN = Common.colorize(YMLLoader.getMessages().getString("cooldown"));
                         SUCCESSFUL = Common.colorize(YMLLoader.getMessages().getString("successful"));
+                        NOTIFICATION = Common.colorize(YMLLoader.getMessages().getString("notification"));
                         MISSING_TARGET = Common.colorize(YMLLoader.getMessages().getString("missing-target"));
+                        MISSING_ONLINE_TARGET = Common.colorize(YMLLoader.getMessages().getString("missing-online-target"));
                         MISSING_REASON = Common.colorize(YMLLoader.getMessages().getString("missing-reason"));
+                        TELEPORT = Common.colorize(YMLLoader.getMessages().getString("teleport-succesful"));
+                        TELEPORT_CROSS_SERVER = Common.colorize(YMLLoader.getMessages().getString("teleport-another-server"));
 
                 }
         }

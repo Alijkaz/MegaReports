@@ -6,6 +6,7 @@ import ir.jeykey.megareports.commands.ManageCommand;
 import ir.jeykey.megareports.commands.ReportCommand;
 import ir.jeykey.megareports.database.DataSource;
 import ir.jeykey.megareports.events.ManageReportGUI;
+import ir.jeykey.megareports.events.MessageListener;
 import ir.jeykey.megareports.events.ReportsGUI;
 import ir.jeykey.megareports.events.PlayerQuit;
 import ir.jeykey.megareports.utils.Common;
@@ -78,6 +79,12 @@ public final class MegaReports extends JavaPlugin {
                 // Calculating plugin load time in milliseconds
                 long time = end - start;
 
+                // Registering BungeeCord messaging
+                if (YMLLoader.Config.BUNGEECORD) {
+                        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+                        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new MessageListener());
+                }
+
                 // Logging MegaReports has been activated
                 Common.log(
                         Common.repeat("&a&m=", 12, "&2"),
@@ -90,6 +97,12 @@ public final class MegaReports extends JavaPlugin {
 
         @Override
         public void onDisable() {
+                // Registering BungeeCord messaging
+                if (YMLLoader.Config.BUNGEECORD) {
+                        this.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
+                        this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
+                }
+
                 // Logging MegaReports has been deactivated
                 Common.log(
                         Common.repeat("&c&m=", 12, "&4"),

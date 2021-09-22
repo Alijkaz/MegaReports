@@ -5,15 +5,14 @@ import ir.jeykey.megareports.utils.Common;
 import ir.jeykey.megareports.utils.Cooldown;
 import ir.jeykey.megareports.utils.YMLLoader;
 import lombok.SneakyThrows;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 public class ReportCommand implements CommandExecutor {
         @Override
@@ -24,14 +23,40 @@ public class ReportCommand implements CommandExecutor {
                         return true;
                 }
 
+                if (!sender.hasPermission("megareports.use.report")) {
+                        Common.send(sender, "&cYou don't have &4megareports.use.report &cpermission needed for admin commands!");
+                        return true;
+                }
+
                 Player p = (Player) sender;
 
                 if (args.length < 1) {
-                        Common.send(sender, YMLLoader.Messages.MISSING_TARGET.replace("%reporter%", p.getName()), true);
+                        Common.send(sender, YMLLoader.Messages.MISSING_TARGET.replace("%reporter%", p.getName()));
                         return true;
                 } else if (args.length == 1) {
                         if (YMLLoader.Config.REASON_REQUIRED) {
-                                Common.send(sender, YMLLoader.Messages.MISSING_REASON.replace("%reporter%", p.getName()), true);
+                                Common.send(sender, YMLLoader.Messages.MISSING_REASON.replace("%reporter%", p.getName()));
+                                return true;
+                        }
+                }
+
+
+                // Getting target
+                String target = args[0];
+
+                // Getting rest of args as reason
+                LinkedList<String> argsCopy = new LinkedList<String>(Arrays.asList(args));
+                argsCopy.removeFirst();
+                String reason = String.join(" ", argsCopy);
+
+                if (YMLLoader.Config.ONLINE_TARGET_REQUIRED) {
+                        if (Bukkit.getServer().getPlayerExact(target) == null) {
+                                Common.send(
+                                        sender,
+                                        YMLLoader.Messages.MISSING_ONLINE_TARGET
+                                                .replace("%reporter%", sender.getName())
+                                                .replace("%target%", target)
+                                );
                                 return true;
                         }
                 }
@@ -48,14 +73,6 @@ public class ReportCommand implements CommandExecutor {
                         }
                 }
 
-                // Getting target
-                String target = args[0];
-
-                // Getting rest of args as reason
-                LinkedList<String> argsCopy = new LinkedList<String>(Arrays.asList(args));
-                argsCopy.removeFirst();
-                String reason = String.join(" ", argsCopy);
-
                 // Creating report model
                 Report report = new Report(p.getName(), target, reason, p.getLocation());
 
@@ -69,8 +86,19 @@ public class ReportCommand implements CommandExecutor {
                                 .replace("%reporter%", p.getName())
                                 .replace("%target%", target)
                                 .replace("%reason%", reason)
-                        , true
                 );
+
+                for (Player onlinePlayer: Bukkit.getOnlinePlayers()) {
+                        if (onlinePlayer.hasPermission("megareports.notify")) {
+                                Common.send(
+                                        onlinePlayer,
+                                        YMLLoader.Messages.NOTIFICATION
+                                                .replace("%reporter%", p.getName())
+                                                .replace("%target%", target)
+                                                .replace("%reason%", reason)
+                                );
+                        }
+                }
 
                 return true;
         }
