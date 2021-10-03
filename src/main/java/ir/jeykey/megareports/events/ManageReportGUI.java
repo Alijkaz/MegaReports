@@ -29,7 +29,7 @@ public class ManageReportGUI implements Listener {
                         "&cServer: &4" + report.getServer(),
                         "&cReporter: &4" + report.getReporter(),
                         "&cTarget: &4" + report.getTarget(),
-                        "&cWorld: &4" + report.getLocation().getWorld().getName(),
+//                        "&cWorld: &4" + report.getLocation().getWorld().getName(),
                         "&cXYZ: &4" + Math.round(report.getLocation().getX()) + "," + Math.round(report.getLocation().getY()) + "," + Math.round(report.getLocation().getZ()),
                         "&cReported At: &4" + report.getCreatedAt()
                 );

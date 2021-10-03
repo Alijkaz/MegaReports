@@ -16,6 +16,9 @@ storage:
     username: your_username
     password: your_password
     database: your_database
+    # Don't edit if you don't know what you're doing
+    # To prevent MySQL > 8.0 transaction errors please use com.mysql.cj.jdbc.Driver
+    driver: com.mysql.jdbc.Driver
     host: 127.0.0.1
     port: 3306
 
