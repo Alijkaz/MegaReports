@@ -40,9 +40,7 @@ public class DataSource {
                 config.setJdbcUrl("jdbc:mysql://" + YMLLoader.Config.MYSQL_HOST + ":" + YMLLoader.Config.MYSQL_PORT + "/" + YMLLoader.Config.MYSQL_DB + "?useSSL=false");
                 config.setUsername(YMLLoader.Config.MYSQL_USERNAME);
                 config.setPassword(YMLLoader.Config.MYSQL_PASSWORD);
-//                config.setDriverClassName("com.mysql.jdbc.Driver");
-                // Required for mysql > 8:
-                 config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+                config.setDriverClassName(YMLLoader.Config.MYSQL_DRIVER);
                 config.addDataSourceProperty("cachePrepStmts", "true");
                 config.addDataSourceProperty("prepStmtCacheSize", "250");
                 config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");

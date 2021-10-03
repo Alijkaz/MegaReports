@@ -67,6 +67,7 @@ public class YMLLoader {
                 public static String MYSQL_PASSWORD;
                 public static String MYSQL_HOST;
                 public static String MYSQL_DB;
+                public static String MYSQL_DRIVER;
                 public static String MYSQL_PORT;
 
                 public static Integer COOLDOWN;
@@ -93,6 +94,7 @@ public class YMLLoader {
                         MYSQL_PASSWORD = YMLLoader.getConfig().getString("storage.mysql.password");
                         MYSQL_HOST = YMLLoader.getConfig().getString("storage.mysql.host");
                         MYSQL_DB = YMLLoader.getConfig().getString("storage.mysql.database");
+                        MYSQL_DRIVER = YMLLoader.getConfig().getString("storage.mysql.driver");
                         MYSQL_PORT = YMLLoader.getConfig().getString("storage.mysql.port");
 
                         // Main plugin configurations
