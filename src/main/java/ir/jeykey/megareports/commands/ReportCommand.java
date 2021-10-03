@@ -88,6 +88,8 @@ public class ReportCommand implements CommandExecutor {
                                 .replace("%reason%", reason)
                 );
 
+                // Send notification for staff online
+                // TODO add cross proxy notification system
                 for (Player onlinePlayer: Bukkit.getOnlinePlayers()) {
                         if (onlinePlayer.hasPermission("megareports.notify")) {
                                 Common.send(
@@ -96,6 +98,7 @@ public class ReportCommand implements CommandExecutor {
                                                 .replace("%reporter%", p.getName())
                                                 .replace("%target%", target)
                                                 .replace("%reason%", reason)
+                                                .replace("%server%", report.getServer())
                                 );
                         }
                 }
