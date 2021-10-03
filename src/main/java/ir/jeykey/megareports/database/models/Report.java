@@ -29,6 +29,7 @@ public class Report {
         @Setter @Getter private String target;
         @Setter @Getter private String reason;
         @Setter @Getter private String closedReason;
+        @Setter @Getter private String closedBy;
         @Setter @Getter private String rawLocation;
         @Setter @Getter private Location location;
         @Setter @Getter private String server;
@@ -81,6 +82,7 @@ public class Report {
                                 String target = rs.getString("target");
                                 String reason = rs.getString("reason");
                                 String closedReason = rs.getString("closed_reason");
+                                String closedBy = rs.getString("closed_by");
                                 String server = rs.getString("server");
                                 String reportedAt = rs.getString("created_at");
                                 String reportedClosedAt = rs.getString("closed_at");
@@ -92,6 +94,7 @@ public class Report {
                                 setTarget(target);
                                 setReason(reason);
                                 setClosedReason(closedReason);
+                                setClosedBy(closedBy);
                                 setRawLocation(rawLocation);
                                 setLocation(location);
                                 setServer(server);
@@ -109,7 +112,8 @@ public class Report {
                         PreparedStatement pst = DataSource.getConnection().prepareStatement(Queries.CLOSE_REPORT);
                         pst.setDate(1, Date.valueOf(LocalDate.now()));
                         pst.setString(2, getClosedReason());
-                        pst.setInt(3, getId());
+                        pst.setString(3, getClosedBy());
+                        pst.setInt(4, getId());
                         DataSource.executeQueryAsync(pst);
                 } catch (SQLException exception) {
                         exception.printStackTrace();
@@ -144,6 +148,7 @@ public class Report {
 
         public void teleport(Player p) {
                 if (!getServer().equalsIgnoreCase(YMLLoader.Config.SERVER) && YMLLoader.Config.BUNGEECORD) {
+                        System.out.println(p.getName() + " part a");
                         MessageListener.sendPlayerTo(p, getServer());
                         MessageListener.teleportPlayerTo(p, this);
                         Common.send(
@@ -153,15 +158,23 @@ public class Report {
                                         .replace("%to%", getServer())
                         );
                 } else {
+                        System.out.println(p.getName() + " part b");
                         for (String cmd: YMLLoader.Config.TELEPORT_COMMANDS)
-                                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd.replace("%player%", p.getName()));
+                                Bukkit.getServer().dispatchCommand(
+                                        Bukkit.getServer().getConsoleSender(),
+                                        cmd.replace(
+                                                "%player%", p.getName()
+                                        )
+                                );
 
                         p.teleport(getLocation());
 
                         Common.send(
                                 p,
                                 YMLLoader.Messages.TELEPORT
-                                        .replace("%id%", getId().toString())
+                                        .replace(
+                                                "%id%", getId().toString()
+                                        )
                         );
                 }
         }
@@ -187,6 +200,7 @@ public class Report {
                                 String target = rs.getString("target");
                                 String reason = rs.getString("reason");
                                 String closedReason = rs.getString("closed_reason");
+                                String closedBy = rs.getString("closed_by");
                                 String server = rs.getString("server");
                                 String reportedAt = rs.getString("created_at");
                                 String reportedClosedAt = rs.getString("closed_at");
@@ -198,6 +212,7 @@ public class Report {
                                 report.setId(id);
                                 report.setServer(server);
                                 report.setClosedReason(closedReason);
+                                report.setClosedBy(closedBy);
                                 report.setRawLocation(rawLocation);
                                 report.setCreatedAt(reportedAt);
                                 report.setClosedAt(reportedClosedAt);

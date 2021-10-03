@@ -18,7 +18,8 @@ successful: "&aYou've reported &c&l%target%&a, Our team will review your report 
 #    - %reporter% = Username of the reporter
 #    - %target% = Username of the player that get reported
 #    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
-notification: "&cNew report has been arrived! &4%reporter% &creported &4%target% &cfor &4%reason%"
+#    - %server% =Reported in server ( Useful in over proxy/bungee mode )
+notification: "&cNew report has been arrived! &4%reporter% &creported &4%target% &cfor &4%reason% &cin &4%server%"
 
 # Missing target ( /report <target> ) message
 # Placeholders:
