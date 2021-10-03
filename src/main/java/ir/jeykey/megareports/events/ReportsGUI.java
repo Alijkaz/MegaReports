@@ -25,6 +25,7 @@ public class ReportsGUI implements Listener {
                                 "&aServer: &2" + report.getServer(),
                                 "&aReported At: &2" + report.getCreatedAt(),
                                 "&aReported Closed At: &2" + report.getClosedAt(),
+                                "&aClosed By: &2" + report.getClosedBy(),
                                 "&aClosed Reason: &2" + report.getClosedReason(),
                                 "",
                                 "&2&l[ &aCLICK TO MANAGE &2&l]"
