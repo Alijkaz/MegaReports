@@ -29,6 +29,7 @@ public class Report {
         @Setter @Getter private String target;
         @Setter @Getter private String reason;
         @Setter @Getter private String closedReason;
+        @Setter @Getter private String rawLocation;
         @Setter @Getter private Location location;
         @Setter @Getter private String server;
         @Setter @Getter private String createdAt;
@@ -83,13 +84,15 @@ public class Report {
                                 String server = rs.getString("server");
                                 String reportedAt = rs.getString("created_at");
                                 String reportedClosedAt = rs.getString("closed_at");
-                                Location location = Serialization.deserializeLocation(rs.getString("location"));
+                                String rawLocation = rs.getString("location");
+                                Location location = Serialization.deserializeLocation(rawLocation);
 
                                 setId(id);
                                 setReporter(reporter);
                                 setTarget(target);
                                 setReason(reason);
                                 setClosedReason(closedReason);
+                                setRawLocation(rawLocation);
                                 setLocation(location);
                                 setServer(server);
                                 setCreatedAt(reportedAt);
@@ -131,6 +134,12 @@ public class Report {
                 } catch (SQLException exception) {
                         exception.printStackTrace();
                 }
+        }
+
+        public String getWorldName() {
+                if (this.location == null) return null;
+                String[] rawLocationSplit = this.rawLocation.split(",");
+                return rawLocationSplit.length > 0 ? rawLocationSplit[0] : null;
         }
 
         public void teleport(Player p) {
@@ -181,13 +190,15 @@ public class Report {
                                 String server = rs.getString("server");
                                 String reportedAt = rs.getString("created_at");
                                 String reportedClosedAt = rs.getString("closed_at");
-                                Location location = Serialization.deserializeLocation(rs.getString("location"));
+                                String rawLocation = rs.getString("location");
+                                Location location = Serialization.deserializeLocation(rawLocation);
 
                                 report = new Report(reporter, target, reason, location);
 
                                 report.setId(id);
                                 report.setServer(server);
                                 report.setClosedReason(closedReason);
+                                report.setRawLocation(rawLocation);
                                 report.setCreatedAt(reportedAt);
                                 report.setClosedAt(reportedClosedAt);
 
