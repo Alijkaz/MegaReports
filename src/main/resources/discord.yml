@@ -1,0 +1,15 @@
+# Discord integration - By enabling this section you could get notified with a new message when a new report happens
+# Our integration does not need any 3rd party library,plugin ...
+# Just easily create a new webhook for the channel you want and paste it here, We'll do the rest
+enabled: false
+webhook-url: your_webhook_url
+# You could customize title / description of embed message
+# Placeholders:
+#    - %reporter% = Username of the reporter
+#    - %target% = Username of the player that get reported
+#    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
+embed:
+  title: ":warning: %reporter% has reported %target%"
+  description: "**Reason:** %reason%"
+  footer: "Powered by MegaReports"
+  thumbnail-url: "https://cravatar.eu/avatar/%target%/64.png"

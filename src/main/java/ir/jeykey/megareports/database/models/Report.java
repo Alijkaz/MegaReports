@@ -1,13 +1,15 @@
 package ir.jeykey.megareports.database.models;
 
 import ir.jeykey.megareports.MegaReports;
+import ir.jeykey.megareports.config.Config;
+import ir.jeykey.megareports.config.Discord;
+import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.database.DataSource;
 import ir.jeykey.megareports.database.Queries;
 import ir.jeykey.megareports.events.MessageListener;
 import ir.jeykey.megareports.utils.Common;
 import ir.jeykey.megareports.utils.DiscordWebhook;
 import ir.jeykey.megareports.utils.Serialization;
-import ir.jeykey.megareports.utils.YMLLoader;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -17,10 +19,9 @@ import org.bukkit.entity.Player;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class Report {
@@ -36,6 +37,8 @@ public class Report {
         @Setter @Getter private String createdAt;
         @Setter @Getter private String closedAt;
 
+        public static HashMap<Player,Integer> PLAYERS_IN_TELEPORT_MODE = new HashMap<>();
+
         public Report(int id) {
                 setId(id);
         }
@@ -48,7 +51,7 @@ public class Report {
         }
 
         public void save() {
-                setServer(YMLLoader.Config.SERVER);
+                setServer(Config.SERVER);
 
                 try {
                         PreparedStatement pst = DataSource.getConnection().prepareStatement(Queries.INSERT_REPORT);
@@ -63,7 +66,7 @@ public class Report {
                 }
 
                 // Sending notification to discord if enabled in config
-                if (YMLLoader.Config.DISCORD_ENABLED)
+                if (Discord.DISCORD_ENABLED)
                         this.notifyDiscord();
         }
 
@@ -147,31 +150,32 @@ public class Report {
         }
 
         public void teleport(Player p) {
-                if (!getServer().equalsIgnoreCase(YMLLoader.Config.SERVER) && YMLLoader.Config.BUNGEECORD) {
-                        System.out.println(p.getName() + " part a");
+                if (!getServer().equalsIgnoreCase(Config.SERVER) && Config.BUNGEECORD) {
                         MessageListener.sendPlayerTo(p, getServer());
                         MessageListener.teleportPlayerTo(p, this);
                         Common.send(
                                 p,
-                                YMLLoader.Messages.TELEPORT_CROSS_SERVER
-                                        .replace("%from%", YMLLoader.Config.SERVER)
+                                Messages.TELEPORT_CROSS_SERVER
+                                        .replace("%from%", Config.SERVER)
                                         .replace("%to%", getServer())
                         );
                 } else {
-                        System.out.println(p.getName() + " part b");
-                        for (String cmd: YMLLoader.Config.TELEPORT_COMMANDS)
-                                Bukkit.getServer().dispatchCommand(
-                                        Bukkit.getServer().getConsoleSender(),
-                                        cmd.replace(
-                                                "%player%", p.getName()
-                                        )
-                                );
+                        for (String cmd: Config.TELEPORT_COMMANDS) {
+                                cmd = cmd.replace("%player%", p.getName());
+
+                                if (cmd.startsWith("[console]"))
+                                        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd.replace("[console]", "").trim());
+                                else if (cmd.startsWith("[player]"))
+                                        p.performCommand(cmd.replace("[player]", "").trim());
+                        }
+
+                        PLAYERS_IN_TELEPORT_MODE.put(p, this.id);
 
                         p.teleport(getLocation());
 
                         Common.send(
                                 p,
-                                YMLLoader.Messages.TELEPORT
+                                Messages.TELEPORT
                                         .replace(
                                                 "%id%", getId().toString()
                                         )
@@ -231,19 +235,19 @@ public class Report {
                 Bukkit.getScheduler().runTaskAsynchronously(MegaReports.getInstance(), new Runnable() {
                         @Override
                         public void run() {
-                                DiscordWebhook webhook = new DiscordWebhook(YMLLoader.Config.DISCORD_WEBHOOK);
+                                DiscordWebhook webhook = new DiscordWebhook(Discord.DISCORD_WEBHOOK);
                                 DiscordWebhook.EmbedObject embedObject = new DiscordWebhook.EmbedObject();
 
                                 embedObject.setColor(Color.GREEN);
                                 embedObject.setTitle(
-                                        YMLLoader.Config.EMBED_TITLE
+                                        Discord.EMBED_TITLE
                                                 .replace("%reporter%", getReporter())
                                                 .replace("%target%", getTarget())
                                                 .replace("%reason%", getReason())
                                 );
 
                                 embedObject.setDescription(
-                                        YMLLoader.Config.EMBED_DESCRIPTION
+                                        Discord.EMBED_DESCRIPTION
                                                 .replace("%reporter%", getReporter())
                                                 .replace("%target%", getTarget())
                                                 .replace("%reason%", getReason())
@@ -254,7 +258,7 @@ public class Report {
                                 embedObject.addField("Reported At:", Common.getBeautifiedDt(), false);
 
                                 embedObject.setFooter(
-                                        YMLLoader.Config.EMBED_FOOTER
+                                        Discord.EMBED_FOOTER
                                                 .replace("%reporter%", getReporter())
                                                 .replace("%target%", getTarget())
                                                 .replace("%reason%", getReason()),
@@ -262,7 +266,7 @@ public class Report {
                                 );
 
                                 embedObject.setThumbnail(
-                                        YMLLoader.Config.EMBED_THUMBNAIL
+                                        Discord.EMBED_THUMBNAIL
                                                 .replace("%reporter%", getReporter())
                                                 .replace("%target%", getTarget())
                                 );

@@ -4,16 +4,18 @@ import com.zaxxer.hikari.pool.HikariPool;
 import ir.jeykey.megareports.commands.MainCommand;
 import ir.jeykey.megareports.commands.ManageCommand;
 import ir.jeykey.megareports.commands.ReportCommand;
+import ir.jeykey.megareports.config.Config;
+import ir.jeykey.megareports.config.Discord;
+import ir.jeykey.megareports.config.Messages;
+import ir.jeykey.megareports.config.Storage;
 import ir.jeykey.megareports.database.DataSource;
 import ir.jeykey.megareports.events.ManageReportGUI;
 import ir.jeykey.megareports.events.MessageListener;
 import ir.jeykey.megareports.events.ReportsGUI;
 import ir.jeykey.megareports.events.PlayerQuit;
 import ir.jeykey.megareports.utils.Common;
-import ir.jeykey.megareports.utils.YMLLoader;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -31,24 +33,22 @@ public final class MegaReports extends JavaPlugin {
                 instance = this;
 
                 // Creating/Loading configuration files
-                try {
-                        YMLLoader.load();
-                } catch(IOException|InvalidConfigurationException exception) {
-                        disablePlugin(true,
-                                "&cFailed to load config file. Please check config directory/file permissions",
-                                "*vIf you believe this problem is from our plugin please contact development team",
-                                "&cReason: &4" + exception.getMessage()
-                        );
-                }
+                new Config().setup();
+
+                new Storage().setup();
+
+                new Discord().setup();
+
+                new Messages().setup();
 
                 // Setting up datasource
                 try {
-                        if (YMLLoader.Config.STORAGE.equalsIgnoreCase("sqlite")) {
+                        if (Storage.LOCATION.equalsIgnoreCase("sqlite")) {
                                 DataSource.SQLite();
-                        } else if (YMLLoader.Config.STORAGE.equalsIgnoreCase("mysql")) {
+                        } else if (Storage.LOCATION.equalsIgnoreCase("mysql")) {
                                 DataSource.MySQL();
                         } else {
-                                disablePlugin(true, "&cStorage type defined in config (" + YMLLoader.Config.STORAGE + ") is not valid!");
+                                disablePlugin(true, "&cStorage type defined in config (" + Storage.LOCATION + ") is not valid!");
                                 return;
                         }
                 } catch (SQLException|HikariPool.PoolInitializationException exception) {
@@ -80,7 +80,7 @@ public final class MegaReports extends JavaPlugin {
                 long time = end - start;
 
                 // Registering BungeeCord messaging
-                if (YMLLoader.Config.BUNGEECORD) {
+                if (Config.BUNGEECORD) {
                         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
                         getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new MessageListener());
                 }
@@ -98,7 +98,7 @@ public final class MegaReports extends JavaPlugin {
         @Override
         public void onDisable() {
                 // Registering BungeeCord messaging
-                if (YMLLoader.Config.BUNGEECORD) {
+                if (Config.BUNGEECORD) {
                         this.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
                         this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
                 }
@@ -111,7 +111,7 @@ public final class MegaReports extends JavaPlugin {
                 );
         }
 
-        private void disablePlugin(boolean addPrefix, String... messages) {
+        public static void disablePlugin(boolean addPrefix, String... messages) {
                 if (addPrefix)
                         Common.logPrefixed(messages);
                 else

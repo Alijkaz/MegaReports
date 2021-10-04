@@ -1,10 +1,10 @@
 package ir.jeykey.megareports.commands;
 
+import ir.jeykey.megareports.config.Config;
+import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.database.models.Report;
 import ir.jeykey.megareports.utils.Common;
 import ir.jeykey.megareports.utils.Cooldown;
-import ir.jeykey.megareports.utils.YMLLoader;
-import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,11 +31,11 @@ public class ReportCommand implements CommandExecutor {
                 Player p = (Player) sender;
 
                 if (args.length < 1) {
-                        Common.send(sender, YMLLoader.Messages.MISSING_TARGET.replace("%reporter%", p.getName()));
+                        Common.send(sender, Messages.MISSING_TARGET.replace("%reporter%", p.getName()));
                         return true;
                 } else if (args.length == 1) {
-                        if (YMLLoader.Config.REASON_REQUIRED) {
-                                Common.send(sender, YMLLoader.Messages.MISSING_REASON.replace("%reporter%", p.getName()));
+                        if (Config.REASON_REQUIRED) {
+                                Common.send(sender, Messages.MISSING_REASON.replace("%reporter%", p.getName()));
                                 return true;
                         }
                 }
@@ -49,11 +49,11 @@ public class ReportCommand implements CommandExecutor {
                 argsCopy.removeFirst();
                 String reason = String.join(" ", argsCopy);
 
-                if (YMLLoader.Config.ONLINE_TARGET_REQUIRED) {
+                if (Config.ONLINE_TARGET_REQUIRED) {
                         if (Bukkit.getServer().getPlayerExact(target) == null) {
                                 Common.send(
                                         sender,
-                                        YMLLoader.Messages.MISSING_ONLINE_TARGET
+                                        Messages.MISSING_ONLINE_TARGET
                                                 .replace("%reporter%", sender.getName())
                                                 .replace("%target%", target)
                                 );
@@ -61,11 +61,11 @@ public class ReportCommand implements CommandExecutor {
                         }
                 }
 
-                if (YMLLoader.Config.COOLDOWN != -1) {
+                if (Config.COOLDOWN != -1) {
                         if (Cooldown.isCooldown(p.getUniqueId())) {
                                 Common.send(
                                         sender,
-                                        YMLLoader.Messages.COOLDOWN.replace(
+                                        Messages.COOLDOWN.replace(
                                                 "%seconds%", Cooldown.getCooldownSeconds(p.getUniqueId()).toString()
                                         )
                                 );
@@ -82,7 +82,7 @@ public class ReportCommand implements CommandExecutor {
                 // Sending successful
                 Common.send(
                         sender,
-                        YMLLoader.Messages.SUCCESSFUL
+                        Messages.SUCCESSFUL
                                 .replace("%reporter%", p.getName())
                                 .replace("%target%", target)
                                 .replace("%reason%", reason)
@@ -94,7 +94,7 @@ public class ReportCommand implements CommandExecutor {
                         if (onlinePlayer.hasPermission("megareports.notify")) {
                                 Common.send(
                                         onlinePlayer,
-                                        YMLLoader.Messages.NOTIFICATION
+                                        Messages.NOTIFICATION
                                                 .replace("%reporter%", p.getName())
                                                 .replace("%target%", target)
                                                 .replace("%reason%", reason)

@@ -84,5 +84,13 @@
             <artifactId>HikariCP</artifactId>
             <version>3.4.5</version>
         </dependency>
+        <!-- Required for mysql > 8 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.13</version>
+        </dependency>
+
     </dependencies>
+
 </project>

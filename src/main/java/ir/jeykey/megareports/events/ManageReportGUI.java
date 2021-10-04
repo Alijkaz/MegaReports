@@ -1,8 +1,8 @@
 package ir.jeykey.megareports.events;
 
+import ir.jeykey.megareports.config.Config;
 import ir.jeykey.megareports.database.models.Report;
 import ir.jeykey.megareports.utils.Common;
-import ir.jeykey.megareports.utils.YMLLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class ManageReportGUI implements Listener {
         public static HashMap<Player, Report> WAITING_CLOSE_REASON = new HashMap<>();
 
-        protected static Inventory getGui(Report report) {
+        protected static Inventory getGui(Report report, final Player p) {
                 Inventory gui = Bukkit.createInventory(null, 45, Common.colorize( "&c#" + report.getId() + " &4- &cManage Report"));
 
                 ItemStack reportItem = Common.createItem(
@@ -49,12 +49,23 @@ public class ManageReportGUI implements Listener {
                 );
 
                 // Management Items
-                ItemStack teleportReportItem = Common.createItem(
-                        Material.CARROT_STICK,
-                        "&aTeleport",
-                        "",
-                        "&2Teleport to report location"
-                );
+                ItemStack teleportReportItem;
+
+                if (!Report.PLAYERS_IN_TELEPORT_MODE.containsKey(p)) {
+                        teleportReportItem = Common.createItem(
+                                Material.CARROT_STICK,
+                                "&aTeleport",
+                                "",
+                                "&2Teleport to report location"
+                        );
+                } else {
+                        teleportReportItem = Common.createItem(
+                                Material.BARRIER,
+                                "&aExit Teleport Mode",
+                                "",
+                                "&2Exit from teleport mode"
+                        );
+                }
 
                 ItemStack closeReportItem = Common.createItem(
                         Material.EMERALD_BLOCK,
@@ -96,18 +107,17 @@ public class ManageReportGUI implements Listener {
                 return gui;
         }
 
-        public static void openGui(final HumanEntity ent, final Report report) {
-                ent.openInventory(getGui(report));
+        public static void openGui(final Player player, final Report report) {
+                player.openInventory(getGui(report, player));
         }
 
         @EventHandler
         public void onPlayerChat(final AsyncPlayerChatEvent e) {
-                // TODO checking for close reason
-
                 if (WAITING_CLOSE_REASON.containsKey(e.getPlayer())) {
                         Report report = WAITING_CLOSE_REASON.get(e.getPlayer());
 
                         report.setClosedReason(e.getMessage());
+                        report.setClosedBy(e.getPlayer().getName());
 
                         report.close();
 
@@ -162,6 +172,19 @@ public class ManageReportGUI implements Listener {
                         p.closeInventory();
                 } else if (clickedItemName.equalsIgnoreCase(Common.colorize("&aTeleport"))) {
                         report.teleport(p);
+                        p.closeInventory();
+                } else if (clickedItemName.equalsIgnoreCase(Common.colorize("&aExit Teleport Mode"))) {
+                        for (String cmd: Config.TELEPORT_EXIT_COMMANDS) {
+                                cmd = cmd.replace("%player%", p.getName());
+
+                                if (cmd.startsWith("[console]"))
+                                        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd.replace("[console]", "").trim());
+                                else if (cmd.startsWith("[player]"))
+                                        p.performCommand(cmd.replace("[player]", "").trim());
+                        }
+
+                        Report.PLAYERS_IN_TELEPORT_MODE.remove(p);
+
                         p.closeInventory();
                 } else if (clickedItemName.equalsIgnoreCase(Common.colorize("&cDelete Report"))) {
                         report.delete();

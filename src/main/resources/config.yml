@@ -1,4 +1,6 @@
-# Name of the server that plugin is running on ( useful for bungeecord or other proxies use - use VALID BungeeCord server name )
+# Name of the server that plugin is running on
+# - Useful for cross proxy use
+# - Use a VALID BungeeCord server name
 server: default
 
 # Cooldown for report command ( in seconds ) you can use -1 to disable cooldown
@@ -7,47 +9,33 @@ cooldown: -1
 # Specifies that if plugin is running on BungeeCord mode ( if it is, teleporting to report system would send you to specific server )
 bungeecord: false
 
-# Storage related options
-storage:
-  # Storage type ( sqlite / mysql )
-  type: sqlite
-  # MySQL login information ( needed just if storage type is mysql)
-  mysql:
-    username: your_username
-    password: your_password
-    database: your_database
-    # Don't edit if you don't know what you're doing
-    # To prevent MySQL > 8.0 transaction errors please use com.mysql.cj.jdbc.Driver
-    driver: com.mysql.jdbc.Driver
-    host: 127.0.0.1
-    port: 3306
-
 # Options that are required to report
 report-requirements:
   # Is reason required in report command? (example: /report Alijk <reason>)
   reason: true
   # Should we check if the target is online and then allow reporting?
   online-target: true
+  # Should we check if the player is not reporting himself?
+  prevent-self-report: true
 
 # Commands that will be executed on player before teleporting to report location
+  # Bungee commands are not supported here
+  # Prefixes:
+  # - [console] = Run this command from console
+  # - [player] = Run this command from player
   # Placeholders:
   #    - %player% = Username of the player
-teleport-commands:
-  - "vanish %player%"
+teleport-enter-commands:
+  - "[console] vanish %player% on"
+  - "[console] gamemode spectator %player%"
 
-# Discord integration - By enabling this section you could get notified with a new message when a new report happens
-# Our integration does not need any 3rd party library,plugin ...
-# Just easily create a new webhook for the channel you want and paste it here, We'll do the rest
-discord:
-  enable: false
-  webhook-url: your_webhook_url
-  # You could customize title / description of embed message
+# Commands that will be executed on player report exit
+  # Prefixes:
+  # - [console] = Run this command from console
+  # - [player] = Run this command from player
   # Placeholders:
-  #    - %reporter% = Username of the reporter
-  #    - %target% = Username of the player that get reported
-  #    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
-  embed:
-    title: ":warning: %reporter% has reported %target%"
-    description: "**Reason:** %reason%"
-    footer: "Powered by MegaReports"
-    thumbnail-url: "https://cravatar.eu/avatar/%target%/64.png"
+  #    - %player% = Username of the player
+teleport-exit-commands:
+  - "[console] vanish %player% off"
+  - "[console] gamemode adventure %player%"
+

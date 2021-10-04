@@ -3,7 +3,7 @@ package ir.jeykey.megareports.database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import ir.jeykey.megareports.MegaReports;
-import ir.jeykey.megareports.utils.YMLLoader;
+import ir.jeykey.megareports.config.Storage;
 import org.bukkit.Bukkit;
 
 import java.io.File;
@@ -37,10 +37,10 @@ public class DataSource {
         }
 
         public static void MySQL() throws SQLException {
-                config.setJdbcUrl("jdbc:mysql://" + YMLLoader.Config.MYSQL_HOST + ":" + YMLLoader.Config.MYSQL_PORT + "/" + YMLLoader.Config.MYSQL_DB + "?useSSL=false");
-                config.setUsername(YMLLoader.Config.MYSQL_USERNAME);
-                config.setPassword(YMLLoader.Config.MYSQL_PASSWORD);
-                config.setDriverClassName(YMLLoader.Config.MYSQL_DRIVER);
+                config.setJdbcUrl("jdbc:mysql://" + Storage.MYSQL_HOST + ":" + Storage.MYSQL_PORT + "/" + Storage.MYSQL_DB + "?useSSL=false");
+                config.setUsername(Storage.MYSQL_USERNAME);
+                config.setPassword(Storage.MYSQL_PASSWORD);
+                config.setDriverClassName("com.mysql.cj.jdbc.Driver");
                 config.addDataSourceProperty("cachePrepStmts", "true");
                 config.addDataSourceProperty("prepStmtCacheSize", "250");
                 config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");

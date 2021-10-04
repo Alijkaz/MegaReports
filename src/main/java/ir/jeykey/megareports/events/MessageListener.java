@@ -1,14 +1,8 @@
 package ir.jeykey.megareports.events;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import ir.jeykey.megareports.MegaReports;
 import ir.jeykey.megareports.database.models.Report;
 import ir.jeykey.megareports.utils.Common;
-import ir.jeykey.megareports.utils.YMLLoader;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
