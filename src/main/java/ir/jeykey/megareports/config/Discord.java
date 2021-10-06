@@ -14,11 +14,11 @@ public class Discord extends Configurable {
 
         @Override
         public void init() {
-                DISCORD_ENABLED = getConfig().getBoolean("discord.enable");
-                DISCORD_WEBHOOK = getConfig().getString("discord.webhook-url");
-                EMBED_TITLE = getConfig().getString("discord.embed.title");
-                EMBED_DESCRIPTION = getConfig().getString("discord.embed.description");
-                EMBED_FOOTER = getConfig().getString("discord.embed.footer");
-                EMBED_THUMBNAIL = getConfig().getString("discord.embed.thumbnail-url");
+                DISCORD_ENABLED = getConfig().getBoolean("enabled");
+                DISCORD_WEBHOOK = getConfig().getString("webhook-url");
+                EMBED_TITLE = getConfig().getString("embed.title");
+                EMBED_DESCRIPTION = getConfig().getString("embed.description");
+                EMBED_FOOTER = getConfig().getString("embed.footer");
+                EMBED_THUMBNAIL = getConfig().getString("embed.thumbnail-url");
         }
 }

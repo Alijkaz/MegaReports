@@ -3,6 +3,7 @@ package ir.jeykey.megareports.events;
 import ir.jeykey.megareports.MegaReports;
 import ir.jeykey.megareports.database.models.Report;
 import ir.jeykey.megareports.utils.Common;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
@@ -23,12 +24,21 @@ public class MessageListener implements PluginMessageListener {
                                 short len = in.readShort();
                                 byte[] data = new byte[len];
                                 in.readFully(data);
-                                int reportId = Integer.parseInt(new String(data));
 
-                                Report report = new Report(reportId);
-                                report.load();
+                                Bukkit.getScheduler().runTaskLater(MegaReports.getInstance(), new Runnable() {
+                                        @Override
+                                        public void run() {
+                                                String[] parts = new String(data).split(",");
+                                                String playerName = parts[0];
+                                                int reportId =  Integer.parseInt(parts[1]);
 
-                                report.teleport(player);
+                                                Report report = new Report(reportId);
+                                                report.load();
+
+                                                report.teleport(Bukkit.getServer().getPlayerExact(playerName));
+                                        }
+                                }, 15);
+
                         }
                 }catch(Exception ex){
                         ex.printStackTrace();
@@ -56,7 +66,7 @@ public class MessageListener implements PluginMessageListener {
                         out.writeUTF(report.getServer());
                         out.writeUTF("MegaReports");
 
-                        byte[] data = report.getId().toString().getBytes();
+                        byte[] data = (p.getName() + "," + report.getId().toString()).getBytes();
                         out.writeShort(data.length);
                         out.write(data);
 
