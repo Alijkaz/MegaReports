@@ -37,7 +37,7 @@ public class DataSource {
         }
 
         public static void MySQL() throws SQLException {
-                config.setJdbcUrl("jdbc:mysql://" + Storage.MYSQL_HOST + ":" + Storage.MYSQL_PORT + "/" + Storage.MYSQL_DB + "?useSSL=false");
+                config.setJdbcUrl("jdbc:mysql://" + Storage.MYSQL_HOST + ":" + Storage.MYSQL_PORT + "/" + Storage.MYSQL_DB + "?useSSL=false&autoReconnect=true");
                 config.setUsername(Storage.MYSQL_USERNAME);
                 config.setPassword(Storage.MYSQL_PASSWORD);
                 config.setDriverClassName("com.mysql.cj.jdbc.Driver");
