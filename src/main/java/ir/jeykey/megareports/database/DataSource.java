@@ -40,7 +40,7 @@ public class DataSource {
                 config.setJdbcUrl("jdbc:mysql://" + Storage.MYSQL_HOST + ":" + Storage.MYSQL_PORT + "/" + Storage.MYSQL_DB + "?useSSL=false&autoReconnect=true");
                 config.setUsername(Storage.MYSQL_USERNAME);
                 config.setPassword(Storage.MYSQL_PASSWORD);
-                config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+                config.setDriverClassName(Storage.MYSQL_DRIVER);
                 config.addDataSourceProperty("cachePrepStmts", "true");
                 config.addDataSourceProperty("prepStmtCacheSize", "250");
                 config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
