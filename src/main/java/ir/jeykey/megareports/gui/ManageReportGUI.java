@@ -1,28 +1,39 @@
-package ir.jeykey.megareports.events;
+package ir.jeykey.megareports.gui;
 
+import ir.jeykey.megacore.MegaItem;
+import ir.jeykey.megacore.gui.MegaGUI;
 import ir.jeykey.megareports.config.Config;
 import ir.jeykey.megareports.database.models.Report;
+import ir.jeykey.megareports.events.ReportsGUI;
 import ir.jeykey.megareports.utils.Common;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
-public class ManageReportGUI implements Listener {
+public class ManageReportGUI extends MegaGUI implements Listener {
+        @Getter private Report report;
+        @Getter private Player player;
         public static HashMap<Player, Report> WAITING_CLOSE_REASON = new HashMap<>();
 
-        protected static Inventory getGui(Report report, final Player p) {
-                Inventory gui = Bukkit.createInventory(null, 45, Common.colorize( "&c#" + report.getId() + " &4- &cManage Report"));
+        public ManageReportGUI() {
+                super(null, 0);
+        }
 
-                ItemStack reportItem = Common.createItem(
+        public ManageReportGUI(Report report, Player player) {
+                super("&c#" + report.getId() + " &4- &cManage Report", 45);
+                this.report = report;
+                this.player = player;
+        }
+
+        @Override
+        public void setup() {
+                MegaItem reportItem = new MegaItem(
                         Material.SAND,
                         "&4&l#" + report.getId() + " &cReport " + report.getTarget(),
                         "",
@@ -35,14 +46,14 @@ public class ManageReportGUI implements Listener {
                         "&cReported At: &4" + report.getCreatedAt()
                 );
 
-                ItemStack closeItem = Common.createItem(
+                MegaItem closeItem = new MegaItem(
                         Material.BARRIER,
                         "&cClose",
                         "",
                         "&4Close Management Menu"
                 );
 
-                ItemStack backItem = Common.createItem(
+                MegaItem backItem = new MegaItem(
                         Material.COMPASS,
                         "&aBack",
                         "",
@@ -50,17 +61,17 @@ public class ManageReportGUI implements Listener {
                 );
 
                 // Management Items
-                ItemStack teleportReportItem;
+                MegaItem teleportReportItem;
 
-                if (!Report.PLAYERS_IN_TELEPORT_MODE.containsKey(p)) {
-                        teleportReportItem = Common.createItem(
+                if (!Report.PLAYERS_IN_TELEPORT_MODE.containsKey(this.player)) {
+                        teleportReportItem = new MegaItem(
                                 Material.CARROT_STICK,
                                 "&aTeleport",
                                 "",
                                 "&2Teleport to report location"
                         );
                 } else {
-                        teleportReportItem = Common.createItem(
+                        teleportReportItem = new MegaItem(
                                 Material.BARRIER,
                                 "&aExit Teleport Mode",
                                 "",
@@ -68,7 +79,7 @@ public class ManageReportGUI implements Listener {
                         );
                 }
 
-                ItemStack closeReportItem = Common.createItem(
+                MegaItem closeReportItem = new MegaItem(
                         Material.EMERALD_BLOCK,
                         "&6Open Report",
                         "",
@@ -76,7 +87,7 @@ public class ManageReportGUI implements Listener {
                 );
 
                 if (report.getClosedAt() == null) {
-                        closeReportItem = Common.createItem(
+                        closeReportItem = new MegaItem(
                                 Material.REDSTONE_BLOCK,
                                 "&6Close Report",
                                 "",
@@ -84,69 +95,31 @@ public class ManageReportGUI implements Listener {
                         );
                 }
 
-                ItemStack deleteReportItem = Common.createItem(
+                MegaItem deleteReportItem = new MegaItem(
                         Material.REDSTONE_TORCH_ON,
                         "&cDelete Report",
                         "",
                         "&4Completely delete report"
                 );
 
-                gui.setItem(20, teleportReportItem);
+                place(20, teleportReportItem);
 
-                gui.setItem(22, closeReportItem);
+                place(22, closeReportItem);
 
-                gui.setItem(24, deleteReportItem);
+                place(24, deleteReportItem);
 
-                gui.setItem(8, backItem);
+                place(8, backItem);
 
-                gui.setItem(40, closeItem);
+                place(40, closeItem);
 
-                gui.addItem(
-                        reportItem
-                );
-
-                return gui;
+                place(0, reportItem);
         }
 
-        public static void openGui(final Player player, final Report report) {
-                player.openInventory(getGui(report, player));
-        }
+        @Override
+        public void handle(Player p, ItemStack itemStack, int slot, ClickType clickType) {
+                final String clickedItemName = itemStack.getItemMeta().getDisplayName();
 
-        @EventHandler
-        public void onPlayerChat(final AsyncPlayerChatEvent e) {
-                if (WAITING_CLOSE_REASON.containsKey(e.getPlayer())) {
-                        Report report = WAITING_CLOSE_REASON.get(e.getPlayer());
-
-                        report.setClosedReason(e.getMessage());
-                        report.setClosedBy(e.getPlayer().getName());
-
-                        report.close();
-
-                        Common.send(e.getPlayer(), "&aYou have successfully closed report &c#" + report.getId() + " &awith reason: &2" + e.getMessage());
-
-                        WAITING_CLOSE_REASON.remove(e.getPlayer());
-
-                        e.setCancelled(true);
-                }
-
-        }
-
-        @EventHandler
-        public void onInventoryClick(final InventoryClickEvent e) {
-                if (!e.getInventory().getName().contains("Manage Report")) return;
-
-                e.setCancelled(true);
-
-                final ItemStack clickedItem = e.getCurrentItem();
-
-                // verify current item is not null
-                if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
-
-                final String clickedItemName = clickedItem.getItemMeta().getDisplayName();
-
-                final Player p = (Player) e.getWhoClicked();
-
-                ItemStack reportItem = e.getInventory().getItem(0);
+                ItemStack reportItem = getInventory().getItem(0);
 
                 if (reportItem == null) return;
 
@@ -156,14 +129,14 @@ public class ManageReportGUI implements Listener {
                 Report report = new Report(reportId);
                 report.load();
 
-                if (clickedItemName.equalsIgnoreCase(Common.colorize("&aBack"))) {
+                if (slot == 8) {
                         p.closeInventory();
                         ReportsGUI.openGui(p);
                         Common.send(p, "&aAll Reports GUI has been opened for you.");
-                } else if (clickedItemName.equalsIgnoreCase(Common.colorize("&cClose"))) {
+                } else if (slot == 40) {
                         p.closeInventory();
                         Common.send(p, "&cManagement GUI has been closed for you.");
-                } else if (clickedItemName.equalsIgnoreCase(Common.colorize("&6Close Report"))) {
+                } else if (slot == 22) {
                         WAITING_CLOSE_REASON.put(p, report);
                         Common.send(p, "&aEnter your reason for closing report:");
                         p.closeInventory();

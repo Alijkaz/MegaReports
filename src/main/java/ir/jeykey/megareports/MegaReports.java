@@ -9,10 +9,10 @@ import ir.jeykey.megareports.config.Discord;
 import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.config.Storage;
 import ir.jeykey.megareports.database.DataSource;
-import ir.jeykey.megareports.events.ManageReportGUI;
-import ir.jeykey.megareports.events.MessageListener;
+import ir.jeykey.megareports.events.BungeeListener;
 import ir.jeykey.megareports.events.ReportsGUI;
 import ir.jeykey.megareports.events.PlayerQuit;
+import ir.jeykey.megareports.gui.ManageReportGUI;
 import ir.jeykey.megareports.utils.Common;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -82,7 +82,7 @@ public final class MegaReports extends JavaPlugin {
                 // Registering BungeeCord messaging
                 if (Config.BUNGEECORD) {
                         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-                        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new MessageListener());
+                        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeListener());
                 }
 
                 // Logging MegaReports has been activated

@@ -9,7 +9,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.io.*;
 
-public class MessageListener implements PluginMessageListener {
+public class BungeeListener implements PluginMessageListener {
         @Override
         public void onPluginMessageReceived(String channel, Player player, byte[] message) {
                 if (!channel.equals("BungeeCord")) {

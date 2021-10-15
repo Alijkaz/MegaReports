@@ -1,6 +1,7 @@
 package ir.jeykey.megareports.events;
 
 import ir.jeykey.megareports.database.models.Report;
+import ir.jeykey.megareports.gui.ManageReportGUI;
 import ir.jeykey.megareports.utils.Common;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -99,6 +100,6 @@ public class ReportsGUI implements Listener {
                 Common.send(p, "&cNow managing report id " + reportId);
 
                 // Opening single report management gui
-                ManageReportGUI.openGui(p, report);
+                new ManageReportGUI(report, p).open(p);
         }
 }

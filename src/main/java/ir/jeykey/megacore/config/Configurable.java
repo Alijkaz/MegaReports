@@ -1,4 +1,4 @@
-package ir.jeykey.megareports.config;
+package ir.jeykey.megacore.config;
 
 import ir.jeykey.megareports.MegaReports;
 import lombok.Getter;

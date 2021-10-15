@@ -1,5 +1,6 @@
 package ir.jeykey.megareports.config;
 
+import ir.jeykey.megacore.config.Configurable;
 import ir.jeykey.megareports.utils.Common;
 
 public class Messages extends Configurable {

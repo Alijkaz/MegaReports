@@ -1,5 +1,7 @@
 package ir.jeykey.megareports.config;
 
+import ir.jeykey.megacore.config.Configurable;
+
 import java.util.List;
 
 public class Config extends Configurable {

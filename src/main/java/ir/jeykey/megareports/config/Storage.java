@@ -1,5 +1,7 @@
 package ir.jeykey.megareports.config;
 
+import ir.jeykey.megacore.config.Configurable;
+
 public class Storage extends Configurable {
         public static String LOCATION;
 

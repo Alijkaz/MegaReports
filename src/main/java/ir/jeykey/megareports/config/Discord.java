@@ -1,5 +1,7 @@
 package ir.jeykey.megareports.config;
 
+import ir.jeykey.megacore.config.Configurable;
+
 public class Discord extends Configurable {
         public static boolean DISCORD_ENABLED;
         public static String DISCORD_WEBHOOK;

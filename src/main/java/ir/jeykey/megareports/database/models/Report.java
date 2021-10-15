@@ -6,7 +6,7 @@ import ir.jeykey.megareports.config.Discord;
 import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.database.DataSource;
 import ir.jeykey.megareports.database.Queries;
-import ir.jeykey.megareports.events.MessageListener;
+import ir.jeykey.megareports.events.BungeeListener;
 import ir.jeykey.megareports.utils.Common;
 import ir.jeykey.megareports.utils.DiscordWebhook;
 import ir.jeykey.megareports.utils.Serialization;
@@ -151,8 +151,8 @@ public class Report {
 
         public void teleport(Player p) {
                 if (!getServer().equalsIgnoreCase(Config.SERVER) && Config.BUNGEECORD) {
-                        MessageListener.sendPlayerTo(p, getServer());
-                        MessageListener.teleportPlayerTo(p, this);
+                        BungeeListener.sendPlayerTo(p, getServer());
+                        BungeeListener.teleportPlayerTo(p, this);
                         Common.send(
                                 p,
                                 Messages.TELEPORT_CROSS_SERVER
