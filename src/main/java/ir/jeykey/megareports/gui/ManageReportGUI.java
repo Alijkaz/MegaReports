@@ -1,29 +1,25 @@
 package ir.jeykey.megareports.gui;
 
-import ir.jeykey.megacore.MegaItem;
+import ir.jeykey.megacore.utils.MegaItem;
 import ir.jeykey.megacore.gui.MegaGUI;
 import ir.jeykey.megareports.config.Config;
 import ir.jeykey.megareports.database.models.Report;
+import ir.jeykey.megareports.events.BungeeListener;
 import ir.jeykey.megareports.events.ReportsGUI;
-import ir.jeykey.megareports.utils.Common;
+import ir.jeykey.megacore.utils.Common;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
-public class ManageReportGUI extends MegaGUI implements Listener {
+public class ManageReportGUI extends MegaGUI {
         @Getter private Report report;
         @Getter private Player player;
         public static HashMap<Player, Report> WAITING_CLOSE_REASON = new HashMap<>();
-
-        public ManageReportGUI() {
-                super(null, 0);
-        }
 
         public ManageReportGUI(Report report, Player player) {
                 super("&c#" + report.getId() + " &4- &cManage Report", 45);
@@ -155,6 +151,12 @@ public class ManageReportGUI extends MegaGUI implements Listener {
                                         Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd.replace("[console]", "").trim());
                                 else if (cmd.startsWith("[player]"))
                                         p.performCommand(cmd.replace("[player]", "").trim());
+                                else if (cmd.startsWith("[server]")) {
+                                        if (Config.BUNGEECORD) {
+                                                String server = cmd.replace("[server]", "").trim();
+                                                BungeeListener.sendPlayerTo(p, server);
+                                        }
+                                }
                         }
 
                         Report.PLAYERS_IN_TELEPORT_MODE.remove(p);

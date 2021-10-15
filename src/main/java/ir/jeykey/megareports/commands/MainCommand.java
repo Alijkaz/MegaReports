@@ -4,13 +4,10 @@ import ir.jeykey.megareports.config.Config;
 import ir.jeykey.megareports.config.Discord;
 import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.config.Storage;
-import ir.jeykey.megareports.utils.Common;
+import ir.jeykey.megacore.utils.Common;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
-
-import java.io.IOException;
 
 public class MainCommand implements CommandExecutor {
         @Override

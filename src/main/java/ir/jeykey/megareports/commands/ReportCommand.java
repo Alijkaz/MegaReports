@@ -3,7 +3,7 @@ package ir.jeykey.megareports.commands;
 import ir.jeykey.megareports.config.Config;
 import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.database.models.Report;
-import ir.jeykey.megareports.utils.Common;
+import ir.jeykey.megacore.utils.Common;
 import ir.jeykey.megareports.utils.Cooldown;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

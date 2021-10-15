@@ -1,5 +1,6 @@
 package ir.jeykey.megareports.events;
 
+import ir.jeykey.megareports.gui.ManageReportGUI;
 import ir.jeykey.megareports.utils.Cooldown;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

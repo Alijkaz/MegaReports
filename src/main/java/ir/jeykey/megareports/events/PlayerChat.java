@@ -1,9 +1,8 @@
 package ir.jeykey.megareports.events;
 
-import ir.jeykey.megareports.MegaReports;
 import ir.jeykey.megareports.database.models.Report;
 import ir.jeykey.megareports.gui.ManageReportGUI;
-import ir.jeykey.megareports.utils.Common;
+import ir.jeykey.megacore.utils.Common;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;

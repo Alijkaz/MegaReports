@@ -33,6 +33,7 @@ teleport-enter-commands:
   # Prefixes:
   # - [console] = Run this command from console
   # - [player] = Run this command from player
+  # - [server] = Send player to this server after exiting, Only works in bungee mode (Ex. [server] lobby)
   # Placeholders:
   #    - %player% = Username of the player
 teleport-exit-commands:

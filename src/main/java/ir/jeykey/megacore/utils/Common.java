@@ -1,4 +1,4 @@
-package ir.jeykey.megareports.utils;
+package ir.jeykey.megacore.utils;
 
 import ir.jeykey.megareports.config.Messages;
 import org.bukkit.Bukkit;

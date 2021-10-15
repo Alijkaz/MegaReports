@@ -1,6 +1,5 @@
-package ir.jeykey.megacore;
+package ir.jeykey.megacore.utils;
 
-import ir.jeykey.megareports.utils.Common;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

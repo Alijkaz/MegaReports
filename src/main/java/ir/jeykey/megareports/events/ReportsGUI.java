@@ -2,7 +2,7 @@ package ir.jeykey.megareports.events;
 
 import ir.jeykey.megareports.database.models.Report;
 import ir.jeykey.megareports.gui.ManageReportGUI;
-import ir.jeykey.megareports.utils.Common;
+import ir.jeykey.megacore.utils.Common;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -16,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 public class ReportsGUI implements Listener {
         protected static Inventory getGui() {
                 Inventory gui = Bukkit.createInventory(null, 45, Common.colorize("&cReports Management"));
-
 
                 for (Report report: Report.all()) {
                         ItemStack reportItem = Common.createItem(

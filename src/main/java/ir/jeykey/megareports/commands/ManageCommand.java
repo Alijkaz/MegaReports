@@ -1,7 +1,7 @@
 package ir.jeykey.megareports.commands;
 
 import ir.jeykey.megareports.events.ReportsGUI;
-import ir.jeykey.megareports.utils.Common;
+import ir.jeykey.megacore.utils.Common;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

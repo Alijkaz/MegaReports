@@ -7,7 +7,7 @@ import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.database.DataSource;
 import ir.jeykey.megareports.database.Queries;
 import ir.jeykey.megareports.events.BungeeListener;
-import ir.jeykey.megareports.utils.Common;
+import ir.jeykey.megacore.utils.Common;
 import ir.jeykey.megareports.utils.DiscordWebhook;
 import ir.jeykey.megareports.utils.Serialization;
 import lombok.Getter;

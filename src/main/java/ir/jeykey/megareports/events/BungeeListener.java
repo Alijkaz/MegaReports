@@ -2,7 +2,7 @@ package ir.jeykey.megareports.events;
 
 import ir.jeykey.megareports.MegaReports;
 import ir.jeykey.megareports.database.models.Report;
-import ir.jeykey.megareports.utils.Common;
+import ir.jeykey.megacore.utils.Common;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
