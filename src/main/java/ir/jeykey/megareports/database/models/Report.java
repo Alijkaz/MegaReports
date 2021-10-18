@@ -149,10 +149,10 @@ public class Report {
                 return rawLocationSplit.length > 0 ? rawLocationSplit[0] : null;
         }
 
-        public void teleport(Player p) {
+        public void teleport(Player p, TeleportMode teleportMode) {
                 if (!getServer().equalsIgnoreCase(Config.SERVER) && Config.BUNGEECORD) {
                         BungeeListener.sendPlayerTo(p, getServer());
-                        BungeeListener.teleportPlayerTo(p, this);
+                        BungeeListener.teleportPlayerTo(p, this, teleportMode);
                         Common.send(
                                 p,
                                 Messages.TELEPORT_CROSS_SERVER
@@ -171,7 +171,12 @@ public class Report {
 
                         PLAYERS_IN_TELEPORT_MODE.put(p, this.id);
 
-                        p.teleport(getLocation());
+                        if (teleportMode == TeleportMode.REPORT_LOCATION)
+                                p.teleport(getLocation());
+                        else if (teleportMode == TeleportMode.REPORTER_LOCATION)
+                                p.teleport(Bukkit.getOfflinePlayer(getReporter()).getPlayer().getLocation());
+                        else if (teleportMode == TeleportMode.TARGET_LOCATION)
+                                p.teleport(Bukkit.getOfflinePlayer(getTarget()).getPlayer().getLocation());
 
                         Common.send(
                                 p,

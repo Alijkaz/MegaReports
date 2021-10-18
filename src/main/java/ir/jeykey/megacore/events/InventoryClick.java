@@ -8,10 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 public class InventoryClick implements Listener {
         /**
          * Handling inventory click events
@@ -24,8 +20,11 @@ public class InventoryClick implements Listener {
                                 continue;
                         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR)
                                 continue;
-                        gui.handle((Player) event.getWhoClicked(), event.getCurrentItem(), event.getSlot(), event.getClick());
-                        break;
+
+                        gui.getItemHandlers().forEach((itemStack, handler) -> {
+                                if (itemStack.isSimilar(event.getCurrentItem()))
+                                        handler.handle((Player) event.getWhoClicked(), event.getCurrentItem(), event.getSlot(), event.getClick());
+                        });
                 }
         }
 }

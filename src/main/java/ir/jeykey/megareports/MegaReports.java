@@ -11,6 +11,7 @@ import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.config.Storage;
 import ir.jeykey.megareports.database.DataSource;
 import ir.jeykey.megareports.events.BungeeListener;
+import ir.jeykey.megareports.events.PlayerChat;
 import ir.jeykey.megareports.events.ReportsGUI;
 import ir.jeykey.megareports.events.PlayerQuit;
 import ir.jeykey.megareports.gui.ManageReportGUI;
@@ -62,6 +63,7 @@ public final class MegaReports extends MegaPlugin {
                 // Registering events
                 register(new PlayerQuit());
                 register(new ReportsGUI());
+                register(new PlayerChat());
 
                 // Registering BungeeCord messaging
                 if (Config.BUNGEECORD) {

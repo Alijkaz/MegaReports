@@ -1,9 +1,11 @@
 package ir.jeykey.megareports.gui;
 
+import ir.jeykey.megacore.gui.HandleEvent;
 import ir.jeykey.megacore.utils.MegaItem;
 import ir.jeykey.megacore.gui.MegaGUI;
 import ir.jeykey.megareports.config.Config;
 import ir.jeykey.megareports.database.models.Report;
+import ir.jeykey.megareports.database.models.TeleportMode;
 import ir.jeykey.megareports.events.BungeeListener;
 import ir.jeykey.megareports.events.ReportsGUI;
 import ir.jeykey.megacore.utils.Common;
@@ -57,21 +59,23 @@ public class ManageReportGUI extends MegaGUI {
                 );
 
                 // Management Items
-                MegaItem teleportReportItem;
+                MegaItem teleportReportItem = new MegaItem(
+                        Material.BARRIER,
+                        "&aExit Teleport Mode",
+                        "",
+                        "&2Exit from teleport mode"
+                );;
 
                 if (!Report.PLAYERS_IN_TELEPORT_MODE.containsKey(this.player)) {
                         teleportReportItem = new MegaItem(
                                 Material.CARROT_STICK,
                                 "&aTeleport",
                                 "",
-                                "&2Teleport to report location"
-                        );
-                } else {
-                        teleportReportItem = new MegaItem(
-                                Material.BARRIER,
-                                "&aExit Teleport Mode",
+                                "&e&lLEFT CLICK &6&l» &eTeleport to Reporter",
+                                "&e&lMIDDLE CLICK &6&l» &eTeleport to Report Location",
+                                "&e&lRIGHT CLICK &6&l» &eTeleport to Target",
                                 "",
-                                "&2Exit from teleport mode"
+                                "&2Teleport to report location"
                         );
                 }
 
@@ -98,74 +102,69 @@ public class ManageReportGUI extends MegaGUI {
                         "&4Completely delete report"
                 );
 
-                place(20, teleportReportItem);
+                place(20, teleportReportItem, (player, itemStack, slot, clickType) -> {
+                        if (!Report.PLAYERS_IN_TELEPORT_MODE.containsKey(this.player)) {
+                                if (clickType == ClickType.LEFT)
+                                        report.teleport(player, TeleportMode.REPORTER_LOCATION);
+                                else if (clickType == ClickType.MIDDLE)
+                                        report.teleport(player, TeleportMode.REPORT_LOCATION);
+                                else if (clickType == ClickType.RIGHT)
+                                        report.teleport(player, TeleportMode.TARGET_LOCATION);
+                        } else {
+                                for (String cmd: Config.TELEPORT_EXIT_COMMANDS) {
+                                        cmd = cmd.replace("%player%", player.getName());
 
-                place(22, closeReportItem);
-
-                place(24, deleteReportItem);
-
-                place(8, backItem);
-
-                place(40, closeItem);
-
-                place(0, reportItem);
-        }
-
-        @Override
-        public void handle(Player p, ItemStack itemStack, int slot, ClickType clickType) {
-                final String clickedItemName = itemStack.getItemMeta().getDisplayName();
-
-                ItemStack reportItem = getInventory().getItem(0);
-
-                if (reportItem == null) return;
-
-                int reportId = Integer.parseInt(reportItem.getItemMeta().getDisplayName().split(" ")[0].split("#")[1]);
-
-                // Finding and loading specific report
-                Report report = new Report(reportId);
-                report.load();
-
-                if (slot == 8) {
-                        p.closeInventory();
-                        ReportsGUI.openGui(p);
-                        Common.send(p, "&aAll Reports GUI has been opened for you.");
-                } else if (slot == 40) {
-                        p.closeInventory();
-                        Common.send(p, "&cManagement GUI has been closed for you.");
-                } else if (slot == 22) {
-                        WAITING_CLOSE_REASON.put(p, report);
-                        Common.send(p, "&aEnter your reason for closing report:");
-                        p.closeInventory();
-                } else if (clickedItemName.equalsIgnoreCase(Common.colorize("&6Open Report"))) {
-                        report.open();
-                        Common.send(p, "&aYou have successfully opened report &c#" + report.getId());
-                        p.closeInventory();
-                } else if (clickedItemName.equalsIgnoreCase(Common.colorize("&aTeleport"))) {
-                        report.teleport(p);
-                        p.closeInventory();
-                } else if (clickedItemName.equalsIgnoreCase(Common.colorize("&aExit Teleport Mode"))) {
-                        for (String cmd: Config.TELEPORT_EXIT_COMMANDS) {
-                                cmd = cmd.replace("%player%", p.getName());
-
-                                if (cmd.startsWith("[console]"))
-                                        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd.replace("[console]", "").trim());
-                                else if (cmd.startsWith("[player]"))
-                                        p.performCommand(cmd.replace("[player]", "").trim());
-                                else if (cmd.startsWith("[server]")) {
-                                        if (Config.BUNGEECORD) {
-                                                String server = cmd.replace("[server]", "").trim();
-                                                BungeeListener.sendPlayerTo(p, server);
+                                        if (cmd.startsWith("[console]"))
+                                                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd.replace("[console]", "").trim());
+                                        else if (cmd.startsWith("[player]"))
+                                                player.performCommand(cmd.replace("[player]", "").trim());
+                                        else if (cmd.startsWith("[server]")) {
+                                                if (Config.BUNGEECORD) {
+                                                        String server = cmd.replace("[server]", "").trim();
+                                                        BungeeListener.sendPlayerTo(player, server);
+                                                }
                                         }
                                 }
+                                Report.PLAYERS_IN_TELEPORT_MODE.remove(player);
                         }
+                        player.closeInventory();
+                });
 
-                        Report.PLAYERS_IN_TELEPORT_MODE.remove(p);
+                place(22, closeReportItem, (player, itemStack, slot, clickType) -> {
+                        if (report.getClosedAt() == null) {
+                                WAITING_CLOSE_REASON.put(player, report);
+                                Common.send(player, "&aEnter your reason for closing report:");
+                                player.closeInventory();
+                        } else {
+                                report.open();
+                                Common.send(player, "&aYou have successfully opened report &c#" + report.getId());
+                                player.closeInventory();
+                        }
+                });
 
-                        p.closeInventory();
-                } else if (clickedItemName.equalsIgnoreCase(Common.colorize("&cDelete Report"))) {
+                place(24, deleteReportItem, (player, itemStack, slot, clickType) -> {
                         report.delete();
-                        Common.send(p, "&aYou have successfully deleted report &c#" + report.getId());
-                        p.closeInventory();
-                }
+                        Common.send(player, "&aYou have successfully deleted report &c#" + report.getId());
+                        player.closeInventory();
+                });
+
+                place(8, backItem, (player, itemStack, slot, clickType) -> {
+                        player.closeInventory();
+                        ReportsGUI.openGui(player);
+                        Common.send(player, "&aAll Reports GUI has been opened for you.");
+                });
+
+                place(40, closeItem, (player, itemStack, slot, clickType) -> {
+                        if (report.getClosedAt() == null) {
+                                player.closeInventory();
+                                Common.send(player, "&cManagement GUI has been closed for you.");
+                        } else {
+                                report.open();
+                                Common.send(player, "&aYou have successfully opened report &c#" + report.getId());
+                                player.closeInventory();
+                        }
+                });
+
+                place(0, reportItem);
         }
 }
