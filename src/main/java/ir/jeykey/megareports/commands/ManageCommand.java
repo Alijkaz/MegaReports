@@ -16,12 +16,12 @@ public class ManageCommand implements CommandExecutor {
                 }
 
                 if (!sender.hasPermission("megareports.manage")) {
-                        Common.send(sender, "&cYou don't have &4megareports.manage &cpermission needed for admin commands!");
+                        Common.send(sender, "&cYou don't have &4&lmegareports.manage &cpermission needed for admin commands!");
                         return true;
                 }
 
                 ReportsGUI.openGui((Player) sender);
-                Common.send(sender, "Reports Management GUI has been opened for you.");
+                Common.send(sender, "&a&lReports Management GUI &ahas been opened for you.");
 
                 return true;
         }
