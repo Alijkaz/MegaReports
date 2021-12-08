@@ -35,13 +35,13 @@ public class ManageReportGUI extends MegaGUI {
                         Material.SAND,
                         "&4&l#" + report.getId() + " &cReport " + report.getTarget(),
                         "",
-                        "&cServer: &4" + report.getServer(),
-                        "&cReporter: &4" + report.getReporter(),
-                        "&cTarget: &4" + report.getTarget(),
-                        "&cReason: &4" + report.getReason(),
-                        "&cWorld: &4" + report.getWorldName(),
-                        "&cXYZ: &4" + Math.round(report.getLocation().getX()) + "," + Math.round(report.getLocation().getY()) + "," + Math.round(report.getLocation().getZ()),
-                        "&cReported At: &4" + report.getCreatedAt()
+                        "&bServer &a»  &4" + report.getServer(),
+                        "&bReporter &a» &4" + report.getReporter(),
+                        "&bTarget &a» &4" + report.getTarget(),
+                        "&bReason &a» &4" + report.getReason(),
+                        "&bWorld &a» &4" + report.getWorldName(),
+                        "&bXYZ &a» &4" + Math.round(report.getLocation().getX()) + "," + Math.round(report.getLocation().getY()) + "," + Math.round(report.getLocation().getZ()),
+                        "&bReported At&a » &4" + report.getCreatedAt()
                 );
 
                 MegaItem closeItem = new MegaItem(
@@ -71,35 +71,35 @@ public class ManageReportGUI extends MegaGUI {
                                 Material.CARROT_STICK,
                                 "&aTeleport",
                                 "",
-                                "&e&lLEFT CLICK &6&l» &eTeleport to Reporter",
-                                "&e&lMIDDLE CLICK &6&l» &eTeleport to Report Location",
-                                "&e&lRIGHT CLICK &6&l» &eTeleport to Target",
+                                "&e&lLEFT CLICK &6» &eTeleport to Reporter",
+                                "&e&lMIDDLE CLICK &6» &eTeleport to Report Location",
+                                "&e&lRIGHT CLICK &6» &eTeleport to Target",
                                 "",
-                                "&2Teleport to report location"
+                                "&● &2Teleport to report location &a●"
                         );
                 }
 
                 MegaItem closeReportItem = new MegaItem(
                         Material.EMERALD_BLOCK,
-                        "&6Open Report",
+                        "&e✔ &6Open Report",
                         "",
-                        "&aReopen report"
+                        "&6✔ &eReopen report"
                 );
 
                 if (report.getClosedAt() == null) {
                         closeReportItem = new MegaItem(
                                 Material.REDSTONE_BLOCK,
-                                "&6Close Report",
+                                "&e✘ &6Close Report",
                                 "",
-                                "&eAssign report as closed"
+                                "&6✘ &eAssign report as closed"
                         );
                 }
 
                 MegaItem deleteReportItem = new MegaItem(
                         Material.REDSTONE_TORCH_ON,
-                        "&cDelete Report",
+                        "&4✘ &c&lDelete Report",
                         "",
-                        "&4Completely delete report"
+                        "&c✘ &4&lCompletely delete report"
                 );
 
                 place(20, teleportReportItem, (player, itemStack, slot, clickType) -> {
@@ -151,13 +151,13 @@ public class ManageReportGUI extends MegaGUI {
                 place(8, backItem, (player, itemStack, slot, clickType) -> {
                         player.closeInventory();
                         ReportsGUI.openGui(player);
-                        Common.send(player, "&aAll Reports GUI has been opened for you.");
+                        Common.send(player, "&a&lAll Reports GUI &ahas been opened for you.");
                 });
 
                 place(40, closeItem, (player, itemStack, slot, clickType) -> {
                         if (report.getClosedAt() == null) {
                                 player.closeInventory();
-                                Common.send(player, "&cManagement GUI has been closed for you.");
+                                Common.send(player, "&c&lManagement GUI &chas been closed for you.");
                         } else {
                                 report.open();
                                 Common.send(player, "&aYou have successfully opened report &c#" + report.getId());

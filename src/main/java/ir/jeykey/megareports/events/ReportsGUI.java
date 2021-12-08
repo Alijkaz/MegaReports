@@ -22,13 +22,13 @@ public class ReportsGUI implements Listener {
                                 Material.EMERALD,
                                 "&2&l#" + report.getId() + " &aReport " + report.getTarget(),
                                 "",
-                                "&aServer: &2" + report.getServer(),
-                                "&aReported At: &2" + report.getCreatedAt(),
-                                "&aReported Closed At: &2" + report.getClosedAt(),
-                                "&aClosed By: &2" + report.getClosedBy(),
-                                "&aClosed Reason: &2" + report.getClosedReason(),
+                                "&aServer &c» &2" + report.getServer(),
+                                "&aReported At &c» &2" + report.getCreatedAt(),
+                                "&aReported Closed At &c» &2" + report.getClosedAt(),
+                                "&aClosed By &c» &2" + report.getClosedBy(),
+                                "&aClosed Reason &c» &2" + report.getClosedReason(),
                                 "",
-                                "&2&l[ &aCLICK TO MANAGE &2&l]"
+                                "&2◈ &a&lCLICK TO MANAGE &2◈"
                         );
 
                         if (report.getClosedAt() == null)
@@ -36,15 +36,15 @@ public class ReportsGUI implements Listener {
                                          Material.REDSTONE_BLOCK,
                                         "&4&l#" + report.getId() + " &cReport " + report.getTarget(),
                                         "",
-                                        "&cServer: &4" + report.getServer(),
-                                        "&cReporter: &4" + report.getReporter(),
-                                        "&cTarget: &4" + report.getTarget(),
-                                         "&cReason: &4" + report.getReason(),
-                                        "&cWorld: &4" + report.getWorldName(),
-                                        "&cXYZ: &4" + Math.round(report.getLocation().getX()) + "," + Math.round(report.getLocation().getY()) + "," + Math.round(report.getLocation().getZ()),
-                                        "&cReported At: &4" + report.getCreatedAt(),
+                                        "&cServer &b» &4" + report.getServer(),
+                                        "&cReporter &b» &4" + report.getReporter(),
+                                        "&cTarget &b» &4" + report.getTarget(),
+                                         "&cReason &b» &4" + report.getReason(),
+                                        "&cWorld &b» &4" + report.getWorldName(),
+                                        "&cXYZ &b» &4" + Math.round(report.getLocation().getX()) + "," + Math.round(report.getLocation().getY()) + "," + Math.round(report.getLocation().getZ()),
+                                        "&cReported At &b» &4" + report.getCreatedAt(),
                                         "",
-                                        "&4&l[ &cCLICK TO MANAGE &4&l]"
+                                        "&4◈ &c&lCLICK TO MANAGE &4◈"
                                 );
 
                         gui.addItem(
@@ -54,9 +54,9 @@ public class ReportsGUI implements Listener {
 
                 ItemStack closeItem = Common.createItem(
                         Material.BARRIER,
-                        "&cClose",
+                        "&4✘ &cClose",
                         "",
-                        "&4Close Management Menu"
+                        "&c✘ &4Close Management Menu"
                 );
 
                 gui.setItem(40, closeItem);
