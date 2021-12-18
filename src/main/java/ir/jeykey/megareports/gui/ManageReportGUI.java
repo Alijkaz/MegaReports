@@ -156,13 +156,9 @@ public class ManageReportGUI extends MegaGui {
 
                 place(8, backItem, (player, itemStack, slot, clickType) -> {
                         player.closeInventory();
-<<<<<<< HEAD
+
                         new ReportsGUI(player).open();
                         Common.send(player, "&aAll Reports GUI has been opened for you.");
-=======
-                        ReportsGUI.openGui(player);
-                        Common.send(player, "&a&lAll Reports GUI &ahas been opened for you.");
->>>>>>> 2b8b0eaac527152af20b00b3ee5f4f863584dea2
                 });
 
                 place(40, closeItem, (player, itemStack, slot, clickType) -> {
