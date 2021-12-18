@@ -2,8 +2,8 @@ package ir.jeykey.megareports.commands;
 
 import ir.jeykey.megareports.config.Config;
 import ir.jeykey.megareports.config.Messages;
-import ir.jeykey.megareports.database.models.Report;
 import ir.jeykey.megacore.utils.Common;
+import ir.jeykey.megareports.database.models.Report;
 import ir.jeykey.megareports.utils.Cooldown;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -11,6 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -77,7 +78,11 @@ public class ReportCommand implements CommandExecutor {
                 Report report = new Report(p.getName(), target, reason, p.getLocation());
 
                 // Saving report to database
-                report.save();
+                try {
+                        report.save();
+                } catch (SQLException exception) {
+                        Common.send(sender, Messages.DATABASE_ISSUE);
+                }
 
                 // Sending successful
                 Common.send(

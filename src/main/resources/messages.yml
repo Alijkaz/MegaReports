@@ -13,6 +13,9 @@ cooldown: "&cYou're on cooldown, please try again in &4%seconds% &cseconds!"
 #    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
 successful: "&aYou've reported &c&l%target%&a, Our team will review your report ASAP!"
 
+# Failed to act as required with database
+database-issue: "&cThere's problem with fetching database, Please contact server administrators"
+
 # Staff notification report message
 # Placeholders:
 #    - %reporter% = Username of the reporter

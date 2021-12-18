@@ -1,6 +1,8 @@
 package ir.jeykey.megareports.config;
 
+import ir.jeykey.megacore.MegaPlugin;
 import ir.jeykey.megacore.config.Configurable;
+import ir.jeykey.megareports.MegaReports;
 
 import java.util.List;
 
@@ -14,8 +16,8 @@ public class Config extends Configurable {
         public static boolean REASON_REQUIRED;
         public static boolean ONLINE_TARGET_REQUIRED;
 
-        public Config() {
-                super("config.yml");
+        public Config(MegaPlugin plugin) {
+                super(plugin, "config.yml");
         }
 
         @Override

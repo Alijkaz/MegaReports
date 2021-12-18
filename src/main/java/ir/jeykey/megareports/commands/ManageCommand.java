@@ -1,7 +1,7 @@
 package ir.jeykey.megareports.commands;
 
-import ir.jeykey.megareports.events.ReportsGUI;
 import ir.jeykey.megacore.utils.Common;
+import ir.jeykey.megareports.gui.ReportsGUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,7 +20,8 @@ public class ManageCommand implements CommandExecutor {
                         return true;
                 }
 
-                ReportsGUI.openGui((Player) sender);
+                new ReportsGUI((Player) sender).open();
+
                 Common.send(sender, "Reports Management GUI has been opened for you.");
 
                 return true;

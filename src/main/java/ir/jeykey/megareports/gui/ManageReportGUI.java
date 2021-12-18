@@ -1,32 +1,29 @@
 package ir.jeykey.megareports.gui;
 
-import ir.jeykey.megacore.gui.HandleEvent;
+import ir.jeykey.megacore.gui.MegaGui;
 import ir.jeykey.megacore.utils.MegaItem;
-import ir.jeykey.megacore.gui.MegaGUI;
+import ir.jeykey.megareports.MegaReports;
 import ir.jeykey.megareports.config.Config;
+import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.database.models.Report;
 import ir.jeykey.megareports.database.models.TeleportMode;
-import ir.jeykey.megareports.events.BungeeListener;
-import ir.jeykey.megareports.events.ReportsGUI;
 import ir.jeykey.megacore.utils.Common;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
-public class ManageReportGUI extends MegaGUI {
-        @Getter private Report report;
-        @Getter private Player player;
+public class ManageReportGUI extends MegaGui {
+        @Getter private final Report report;
         public static HashMap<Player, Report> WAITING_CLOSE_REASON = new HashMap<>();
 
         public ManageReportGUI(Report report, Player player) {
-                super("&c#" + report.getId() + " &4- &cManage Report", 45);
+                super("&c#" + report.getId() + " &4- &cManage Report", 45, player);
                 this.report = report;
-                this.player = player;
         }
 
         @Override
@@ -66,7 +63,7 @@ public class ManageReportGUI extends MegaGUI {
                         "&2Exit from teleport mode"
                 );;
 
-                if (!Report.PLAYERS_IN_TELEPORT_MODE.containsKey(this.player)) {
+                if (!Report.PLAYERS_IN_TELEPORT_MODE.containsKey(getOwner())) {
                         teleportReportItem = new MegaItem(
                                 Material.CARROT_STICK,
                                 "&aTeleport",
@@ -103,7 +100,7 @@ public class ManageReportGUI extends MegaGUI {
                 );
 
                 place(20, teleportReportItem, (player, itemStack, slot, clickType) -> {
-                        if (!Report.PLAYERS_IN_TELEPORT_MODE.containsKey(this.player)) {
+                        if (!Report.PLAYERS_IN_TELEPORT_MODE.containsKey(getOwner())) {
                                 if (clickType == ClickType.LEFT)
                                         report.teleport(player, TeleportMode.REPORTER_LOCATION);
                                 else if (clickType == ClickType.MIDDLE)
@@ -121,7 +118,7 @@ public class ManageReportGUI extends MegaGUI {
                                         else if (cmd.startsWith("[server]")) {
                                                 if (Config.BUNGEECORD) {
                                                         String server = cmd.replace("[server]", "").trim();
-                                                        BungeeListener.sendPlayerTo(player, server);
+                                                        MegaReports.getBungeeApi().connect(player, server);
                                                 }
                                         }
                                 }
@@ -136,21 +133,30 @@ public class ManageReportGUI extends MegaGUI {
                                 Common.send(player, "&aEnter your reason for closing report:");
                                 player.closeInventory();
                         } else {
-                                report.open();
+                                try {
+                                        report.open();
+                                } catch (SQLException ignored) {
+                                        Common.send(player, Messages.DATABASE_ISSUE);
+                                }
+
                                 Common.send(player, "&aYou have successfully opened report &c#" + report.getId());
                                 player.closeInventory();
                         }
                 });
 
                 place(24, deleteReportItem, (player, itemStack, slot, clickType) -> {
-                        report.delete();
+                        try {
+                                report.delete();
+                        } catch (SQLException ignored) {
+                                Common.send(player, Messages.DATABASE_ISSUE);
+                        }
                         Common.send(player, "&aYou have successfully deleted report &c#" + report.getId());
                         player.closeInventory();
                 });
 
                 place(8, backItem, (player, itemStack, slot, clickType) -> {
                         player.closeInventory();
-                        ReportsGUI.openGui(player);
+                        new ReportsGUI(player).open();
                         Common.send(player, "&aAll Reports GUI has been opened for you.");
                 });
 
@@ -159,7 +165,11 @@ public class ManageReportGUI extends MegaGUI {
                                 player.closeInventory();
                                 Common.send(player, "&cManagement GUI has been closed for you.");
                         } else {
-                                report.open();
+                                try {
+                                        report.open();
+                                } catch (SQLException ignored) {
+                                        Common.send(player, Messages.DATABASE_ISSUE);
+                                }
                                 Common.send(player, "&aYou have successfully opened report &c#" + report.getId());
                                 player.closeInventory();
                         }

@@ -1,14 +1,15 @@
 package ir.jeykey.megareports.events;
 
+import ir.jeykey.megacore.utils.Common;
 import ir.jeykey.megareports.MegaReports;
 import ir.jeykey.megareports.database.models.Report;
-import ir.jeykey.megacore.utils.Common;
 import ir.jeykey.megareports.database.models.TeleportMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.io.*;
+import java.sql.SQLException;
 
 public class BungeeListener implements PluginMessageListener {
         @Override
@@ -34,8 +35,13 @@ public class BungeeListener implements PluginMessageListener {
                                                 int reportId =  Integer.parseInt(parts[1]);
                                                 TeleportMode teleportMode = TeleportMode.valueOf(parts[2]);
 
-                                                Report report = new Report(reportId);
-                                                report.load();
+                                                Report report;
+                                                try {
+                                                        report = Report.find(reportId);
+                                                } catch (SQLException ignored) {
+                                                        Common.log("&cMegaReports failed to fetch report  from database (BungeeCord). Please make sure you have connected all the servers to a single database");
+                                                        return;
+                                                }
 
                                                 report.teleport(Bukkit.getServer().getPlayerExact(playerName), teleportMode);
                                         }
@@ -46,19 +52,7 @@ public class BungeeListener implements PluginMessageListener {
                         ex.printStackTrace();
                 }
         }
-
-        public static void sendPlayerTo(Player p, String server) {
-                ByteArrayOutputStream b = new ByteArrayOutputStream();
-                DataOutputStream out = new DataOutputStream(b);
-                try {
-                        out.writeUTF("Connect");
-                        out.writeUTF(server);
-                } catch (IOException ignored) {
-                        Common.logPrefixed("Something wrong happened during sending message to BungeeCord");
-                }
-                p.sendPluginMessage(MegaReports.getInstance(), "BungeeCord", b.toByteArray());
-        }
-
+        
         public static void teleportPlayerTo(Player p, Report report, TeleportMode teleportMode) {
                 try{
                         ByteArrayOutputStream b = new ByteArrayOutputStream();
@@ -68,7 +62,7 @@ public class BungeeListener implements PluginMessageListener {
                         out.writeUTF(report.getServer());
                         out.writeUTF("MegaReports");
 
-                        byte[] data = (p.getName() + "," + report.getId().toString() + "," + teleportMode.name()).getBytes();
+                        byte[] data = (p.getName() + "," + report.getId() + "," + teleportMode.name()).getBytes();
                         out.writeShort(data.length);
                         out.write(data);
 

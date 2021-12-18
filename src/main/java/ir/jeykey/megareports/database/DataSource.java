@@ -1,71 +1,45 @@
 package ir.jeykey.megareports.database;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 import ir.jeykey.megareports.MegaReports;
 import ir.jeykey.megareports.config.Storage;
-import org.bukkit.Bukkit;
+import ir.jeykey.megareports.database.models.Report;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DataSource {
-        private static HikariConfig config = new HikariConfig();
-        private static HikariDataSource ds;
-        private static Connection connection;
+        private static ConnectionSource connectionSource;
 
         public static void SQLite() throws SQLException, IOException, ClassNotFoundException {
-                Class.forName("org.sqlite.JDBC");
-
                 File file = new File(MegaReports.getInstance().getDataFolder(), "data.db");
                 if (!file.exists()) file.createNewFile();
 
-                config.setJdbcUrl("jdbc:sqlite:" + MegaReports.getInstance().getDataFolder() + "/data.db");
-                config.setConnectionTestQuery("SELECT 1");
-                config.addDataSourceProperty("cachePrepStmts", "true");
-                config.addDataSourceProperty("prepStmtCacheSize", "250");
-                config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+                String databaseUrl = "jdbc:sqlite:" + MegaReports.getInstance().getDataFolder() + "/data.db";
 
-                ds = new HikariDataSource(config);
+                connectionSource = new JdbcConnectionSource(databaseUrl);
 
-                connection = ds.getConnection();
-
-                ReportsDB.createTables(false);
+                setupTables();
         }
 
         public static void MySQL() throws SQLException {
-                config.setJdbcUrl("jdbc:mysql://" + Storage.MYSQL_HOST + ":" + Storage.MYSQL_PORT + "/" + Storage.MYSQL_DB + "?useSSL=false&autoReconnect=true");
-                config.setUsername(Storage.MYSQL_USERNAME);
-                config.setPassword(Storage.MYSQL_PASSWORD);
-                config.setDriverClassName(Storage.MYSQL_DRIVER);
-                config.addDataSourceProperty("cachePrepStmts", "true");
-                config.addDataSourceProperty("prepStmtCacheSize", "250");
-                config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+                String databaseUrl = "jdbc:mysql://" + Storage.MYSQL_HOST + ":" + Storage.MYSQL_PORT + "/" + Storage.MYSQL_DB + "?useSSL=false&autoReconnect=true";
 
-                ds = new HikariDataSource(config);
+                connectionSource = new JdbcConnectionSource(databaseUrl, Storage.MYSQL_USERNAME, Storage.MYSQL_PASSWORD);
 
-                connection = ds.getConnection();
-
-                ReportsDB.createTables(true);
+                setupTables();
         }
 
-        public static Connection getConnection() {
-                return connection;
+        public static void setupTables() throws SQLException {
+                MegaReports.setReportsDao(DaoManager.createDao(connectionSource, Report.class));
+                TableUtils.createTableIfNotExists(connectionSource, Report.class);
         }
 
-        public static void executeQueryAsync(PreparedStatement statement) {
-                Bukkit.getScheduler().runTaskAsynchronously(MegaReports.getInstance(), new Runnable() {
-                        @Override
-                        public void run() {
-                                try {
-                                        statement.execute();
-                                } catch (SQLException e) {
-                                        e.printStackTrace();
-                                }
-                        }
-                });
+        public static ConnectionSource getConnection() {
+                return connectionSource;
         }
 }

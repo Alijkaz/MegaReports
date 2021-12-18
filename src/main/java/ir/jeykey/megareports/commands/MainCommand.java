@@ -1,5 +1,7 @@
 package ir.jeykey.megareports.commands;
 
+import ir.jeykey.megacore.MegaPlugin;
+import ir.jeykey.megareports.MegaReports;
 import ir.jeykey.megareports.config.Config;
 import ir.jeykey.megareports.config.Discord;
 import ir.jeykey.megareports.config.Messages;
@@ -19,14 +21,7 @@ public class MainCommand implements CommandExecutor {
                         }
 
                         if ("reload".equalsIgnoreCase(args[0])) {
-                                new Config().setup();
-
-                                new Storage().setup();
-
-                                new Discord().setup();
-
-                                new Messages().setup();
-
+                                MegaReports.getConfigManager().reloadAll();
                                 Common.send(sender, "&aYou've fully re-loaded configuration files.");
                         } else {
                                 Common.send(sender, "&cEntered arg is invalid! Use help command.");

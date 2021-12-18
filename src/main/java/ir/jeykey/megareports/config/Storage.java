@@ -1,5 +1,6 @@
 package ir.jeykey.megareports.config;
 
+import ir.jeykey.megacore.MegaPlugin;
 import ir.jeykey.megacore.config.Configurable;
 
 public class Storage extends Configurable {
@@ -12,8 +13,8 @@ public class Storage extends Configurable {
         public static String MYSQL_DRIVER;
         public static String MYSQL_PORT;
 
-        public Storage() {
-                super("storage.yml");
+        public Storage(MegaPlugin plugin) {
+                super(plugin,"storage.yml");
         }
 
         @Override

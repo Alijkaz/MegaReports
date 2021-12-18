@@ -1,5 +1,6 @@
 package ir.jeykey.megareports.config;
 
+import ir.jeykey.megacore.MegaPlugin;
 import ir.jeykey.megacore.config.Configurable;
 
 public class Discord extends Configurable {
@@ -10,8 +11,8 @@ public class Discord extends Configurable {
         public static String EMBED_FOOTER;
         public static String EMBED_THUMBNAIL;
 
-        public Discord() {
-                super("discord.yml");
+        public Discord(MegaPlugin plugin) {
+                super(plugin,"discord.yml");
         }
 
         @Override

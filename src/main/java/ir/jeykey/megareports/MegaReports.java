@@ -1,6 +1,6 @@
 package ir.jeykey.megareports;
 
-import com.zaxxer.hikari.pool.HikariPool;
+import com.j256.ormlite.dao.Dao;
 import ir.jeykey.megacore.MegaPlugin;
 import ir.jeykey.megareports.commands.MainCommand;
 import ir.jeykey.megareports.commands.ManageCommand;
@@ -10,28 +10,31 @@ import ir.jeykey.megareports.config.Discord;
 import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.config.Storage;
 import ir.jeykey.megareports.database.DataSource;
+import ir.jeykey.megareports.database.models.Report;
 import ir.jeykey.megareports.events.BungeeListener;
 import ir.jeykey.megareports.events.PlayerChat;
-import ir.jeykey.megareports.events.ReportsGUI;
 import ir.jeykey.megareports.events.PlayerQuit;
-import ir.jeykey.megareports.gui.ManageReportGUI;
-import ir.jeykey.megacore.utils.Common;
-import org.bukkit.Bukkit;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 public final class MegaReports extends MegaPlugin {
+        @Getter @Setter private static Dao<Report,String> reportsDao;
+
         @Override
         public void onPluginEnable() {
                 // Creating/Loading configuration files
-                new Config().setup();
+                getConfigManager().register(Config.class);
 
-                new Storage().setup();
+                getConfigManager().register(Storage.class);
 
-                new Discord().setup();
+                getConfigManager().register(Discord.class);
 
-                new Messages().setup();
+                getConfigManager().register(Messages.class);
+
+                setPrefix(Messages.PREFIX);
 
                 // Setting up datasource
                 try {
@@ -40,18 +43,21 @@ public final class MegaReports extends MegaPlugin {
                         } else if (Storage.LOCATION.equalsIgnoreCase("mysql")) {
                                 DataSource.MySQL();
                         } else {
-                                disablePlugin(true, "&cStorage type defined in config (" + Storage.LOCATION + ") is not valid!");
+                                disablePlugin( "&cStorage type defined in config (" + Storage.LOCATION + ") is not valid!");
                                 return;
                         }
-                } catch (SQLException|HikariPool.PoolInitializationException exception) {
-                        disablePlugin(true, "&cPlugin could not work with database! [ Check Stack Trace For More Information ]");
+                } catch (SQLException exception) {
+                        exception.printStackTrace();
+                        disablePlugin( "&cPlugin could not work with database! [ Check Stack Trace For More Information ]");
                         return;
                 }
                 catch (IOException exception) {
-                        disablePlugin(true,"&cPlugin is unable to create database file, Please check directory permissions [ Check Stack Trace For More Information ]");
+                        exception.printStackTrace();
+                        disablePlugin("&cPlugin is unable to create database file, Please check directory permissions [ Check Stack Trace For More Information ]");
                         return;
                 } catch (ClassNotFoundException exception) {
-                        disablePlugin(true, "&cIt seems that there's a problem with plugin and it could not be loaded, Please contact plugin developers [ Check Stack Trace For More Information ]");
+                        exception.printStackTrace();
+                        disablePlugin( "&cIt seems that there's a problem with plugin and it could not be loaded, Please contact plugin developers [ Check Stack Trace For More Information ]");
                         return;
                 }
 
@@ -62,7 +68,6 @@ public final class MegaReports extends MegaPlugin {
 
                 // Registering events
                 register(new PlayerQuit());
-                register(new ReportsGUI());
                 register(new PlayerChat());
 
                 // Registering BungeeCord messaging
@@ -80,13 +85,4 @@ public final class MegaReports extends MegaPlugin {
                         this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
                 }
         }
-
-        public static void disablePlugin(boolean addPrefix, String... messages) {
-                if (addPrefix)
-                        Common.logPrefixed(messages);
-                else
-                        Common.log(messages);
-                Bukkit.getPluginManager().disablePlugin(instance);
-        }
-
 }

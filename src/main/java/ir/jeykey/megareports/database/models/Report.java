@@ -1,13 +1,15 @@
 package ir.jeykey.megareports.database.models;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import ir.jeykey.megacore.MegaPlugin;
+import ir.jeykey.megacore.utils.Common;
 import ir.jeykey.megareports.MegaReports;
 import ir.jeykey.megareports.config.Config;
 import ir.jeykey.megareports.config.Discord;
 import ir.jeykey.megareports.config.Messages;
-import ir.jeykey.megareports.database.DataSource;
-import ir.jeykey.megareports.database.Queries;
 import ir.jeykey.megareports.events.BungeeListener;
-import ir.jeykey.megacore.utils.Common;
 import ir.jeykey.megareports.utils.DiscordWebhook;
 import ir.jeykey.megareports.utils.Serialization;
 import lombok.Getter;
@@ -18,274 +20,230 @@ import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@DatabaseTable(tableName = "megareports_reports")
 public class Report {
-        @Setter @Getter private Integer id;
-        @Setter @Getter private String reporter;
-        @Setter @Getter private String target;
-        @Setter @Getter private String reason;
-        @Setter @Getter private String closedReason;
-        @Setter @Getter private String closedBy;
-        @Setter @Getter private String rawLocation;
-        @Setter @Getter private Location location;
-        @Setter @Getter private String server;
-        @Setter @Getter private String createdAt;
-        @Setter @Getter private String closedAt;
+    public static HashMap<Player,Integer> PLAYERS_IN_TELEPORT_MODE = new HashMap<>();
 
-        public static HashMap<Player,Integer> PLAYERS_IN_TELEPORT_MODE = new HashMap<>();
+    @DatabaseField(columnName = "id", generatedId = true) @Getter @Setter
+    private int id;
 
-        public Report(int id) {
-                setId(id);
+    @DatabaseField(canBeNull = false) @Getter @Setter
+    private String reporter;
+
+    @DatabaseField() @Getter @Setter
+    private String target;
+
+    @DatabaseField() @Getter @Setter
+    private String reason;
+
+    @DatabaseField() @Getter @Setter
+    private String closedReason;
+
+    @DatabaseField() @Getter @Setter
+    private String closedBy;
+
+    @DatabaseField() @Getter @Setter
+    private String rawLocation;
+
+    @Getter @Setter
+    private Location location;
+
+    @DatabaseField() @Getter @Setter
+    private String server;
+
+    @DatabaseField(dataType = DataType.SQL_DATE) @Getter @Setter
+    private Date createdAt;
+
+    @DatabaseField(dataType = DataType.SQL_DATE) @Getter @Setter
+    private Date closedAt;
+
+    public Report() {
+
+    }
+
+    public Report(int id) {
+        setId(id);
+    }
+
+    public Report(String reporter, String target, String reason, Location loc) {
+        setReporter(reporter);
+        setTarget(target);
+        setReason(reason);
+        setLocation(loc);
+        setRawLocation(Serialization.serializeLocation(getLocation()));
+    }
+
+    public void save() throws SQLException {
+        setServer(Config.SERVER);
+        setCreatedAt(getDate());
+
+        MegaReports.getReportsDao().create(this);
+
+        // Sending notification to discord if enabled in config
+        if (Discord.DISCORD_ENABLED)
+            this.notifyDiscord();
+
+    }
+
+    public static Report find(int id) throws SQLException {
+        Report report = MegaReports.getReportsDao().queryForId(String.valueOf(id));
+        report.setLocation(Serialization.deserializeLocation(report.getRawLocation()));
+        return report;
+    }
+
+    public void close() throws SQLException {
+        setClosedAt(getDate());
+        setClosedBy(getClosedBy());
+        setClosedReason(getClosedReason());
+        save();
+    }
+
+    public void open() throws SQLException {
+        setClosedAt(null);
+        setClosedBy(null);
+        setClosedReason(null);
+        save();
+    }
+
+    public void delete() throws SQLException {
+        MegaReports.getReportsDao().delete(this);
+    }
+
+    public static long count() {
+        try {
+            return MegaReports.getReportsDao().countOf();
+        } catch(SQLException ignored) {
+            return 0;
         }
+    }
 
-        public Report(String reporter, String target, String reason, Location loc) {
-                setReporter(reporter);
-                setTarget(target);
-                setReason(reason);
-                setLocation(loc);
+    public String getWorldName() {
+        if (this.location == null) return null;
+        String[] rawLocationSplit = this.rawLocation.split(",");
+        return rawLocationSplit.length > 0 ? rawLocationSplit[0] : null;
+    }
+
+    public void teleport(Player p, TeleportMode teleportMode) {
+        if (!getServer().equalsIgnoreCase(Config.SERVER) && Config.BUNGEECORD) {
+            MegaReports.getBungeeApi().connect(p, getServer());
+            BungeeListener.teleportPlayerTo(p, this, teleportMode);
+            Common.send(
+                    p,
+                    Messages.TELEPORT_CROSS_SERVER
+                            .replace("%from%", Config.SERVER)
+                            .replace("%to%", getServer())
+            );
+        } else {
+            for (String cmd: Config.TELEPORT_COMMANDS) {
+                cmd = cmd.replace("%player%", p.getName());
+
+                if (cmd.startsWith("[console]"))
+                    Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd.replace("[console]", "").trim());
+                else if (cmd.startsWith("[player]"))
+                    p.performCommand(cmd.replace("[player]", "").trim());
+            }
+
+            PLAYERS_IN_TELEPORT_MODE.put(p, getId());
+
+            if (teleportMode == TeleportMode.REPORT_LOCATION)
+                p.teleport(getLocation());
+            else if (teleportMode == TeleportMode.REPORTER_LOCATION)
+                p.teleport(Bukkit.getOfflinePlayer(getReporter()).getPlayer().getLocation());
+            else if (teleportMode == TeleportMode.TARGET_LOCATION)
+                p.teleport(Bukkit.getOfflinePlayer(getTarget()).getPlayer().getLocation());
+
+            Common.send(
+                    p,
+                    Messages.TELEPORT
+                            .replace(
+                                    "%id%", Long.toString(getId())
+                            )
+            );
         }
+    }
 
-        public void save() {
-                setServer(Config.SERVER);
+    public static List<Report> all() {
+        try {
+            return all(0, (int) MegaReports.getReportsDao().countOf());
+        } catch (SQLException ignored) {
+            return new ArrayList<>();
+        }
+    }
+
+    public static List<Report> all(int offset, int limit) {
+        try {
+            List<Report> reports = MegaReports.getReportsDao().queryBuilder().orderBy("id", false).offset(Integer.toUnsignedLong(offset)).limit(Integer.toUnsignedLong(limit)).query();
+            reports.forEach((report) -> {
+                report.setLocation(Serialization.deserializeLocation(report.getRawLocation()));
+            });
+            return reports;
+        } catch (SQLException ignored) {
+            return new ArrayList<>();
+        }
+    }
+
+    private void notifyDiscord() {
+        Bukkit.getScheduler().runTaskAsynchronously(MegaReports.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                DiscordWebhook webhook = new DiscordWebhook(Discord.DISCORD_WEBHOOK);
+                DiscordWebhook.EmbedObject embedObject = new DiscordWebhook.EmbedObject();
+
+                embedObject.setColor(Color.GREEN);
+                embedObject.setTitle(
+                        Discord.EMBED_TITLE
+                                .replace("%reporter%", getReporter())
+                                .replace("%target%", getTarget())
+                                .replace("%reason%", getReason())
+                );
+
+                embedObject.setDescription(
+                        Discord.EMBED_DESCRIPTION
+                                .replace("%reporter%", getReporter())
+                                .replace("%target%", getTarget())
+                                .replace("%reason%", getReason())
+                );
+
+                embedObject.addField("Server:", getServer(), false);
+                embedObject.addField("World:", location.getWorld().getName(), false);
+                embedObject.addField("Reported At:", Common.getBeautifiedDt(), false);
+
+                embedObject.setFooter(
+                        Discord.EMBED_FOOTER
+                                .replace("%reporter%", getReporter())
+                                .replace("%target%", getTarget())
+                                .replace("%reason%", getReason()),
+                        null
+                );
+
+                embedObject.setThumbnail(
+                        Discord.EMBED_THUMBNAIL
+                                .replace("%reporter%", getReporter())
+                                .replace("%target%", getTarget())
+                );
+
+                webhook.addEmbed(embedObject);
 
                 try {
-                        PreparedStatement pst = DataSource.getConnection().prepareStatement(Queries.INSERT_REPORT);
-                        pst.setString(1, getReporter());
-                        pst.setString(2, getTarget());
-                        pst.setString(3, getReason());
-                        pst.setString(4, Serialization.serializeLocation(getLocation()));
-                        pst.setString(5, getServer());
-                        DataSource.executeQueryAsync(pst);
-                } catch (SQLException exception) {
-                        exception.printStackTrace();
+                    webhook.execute();
+                } catch (IOException exception) {
+                    Common.logPrefixed("&cFailed to send webhook notification, please check your network connectivity!", "&cStack Trace:");
+                    exception.printStackTrace();
                 }
+            }
+        });
+    }
 
-                // Sending notification to discord if enabled in config
-                if (Discord.DISCORD_ENABLED)
-                        this.notifyDiscord();
-        }
+    public Date getDate() {
+        return Date.valueOf(LocalDate.now());
+    }
 
-        /**
-         * This method is used to find and load specific report using Report#id
-         */
-        public void load() {
-                try {
-                        Connection con = DataSource.getConnection();
-                        PreparedStatement pst = con.prepareStatement(Queries.SELECT_REPORT);
-                        pst.setInt(1, getId());
-                        ResultSet rs = pst.executeQuery();
-                        while (rs.next()) {
-                                Integer id = rs.getInt("id");
-                                String reporter = rs.getString("reporter");
-                                String target = rs.getString("target");
-                                String reason = rs.getString("reason");
-                                String closedReason = rs.getString("closed_reason");
-                                String closedBy = rs.getString("closed_by");
-                                String server = rs.getString("server");
-                                String reportedAt = rs.getString("created_at");
-                                String reportedClosedAt = rs.getString("closed_at");
-                                String rawLocation = rs.getString("location");
-                                Location location = Serialization.deserializeLocation(rawLocation);
-
-                                setId(id);
-                                setReporter(reporter);
-                                setTarget(target);
-                                setReason(reason);
-                                setClosedReason(closedReason);
-                                setClosedBy(closedBy);
-                                setRawLocation(rawLocation);
-                                setLocation(location);
-                                setServer(server);
-                                setCreatedAt(reportedAt);
-                                setClosedAt(reportedClosedAt);
-                        }
-                } catch (SQLException exception) {
-                        exception.printStackTrace();
-                }
-        }
-
-
-        public void close() {
-                try {
-                        PreparedStatement pst = DataSource.getConnection().prepareStatement(Queries.CLOSE_REPORT);
-                        pst.setDate(1, Date.valueOf(LocalDate.now()));
-                        pst.setString(2, getClosedReason());
-                        pst.setString(3, getClosedBy());
-                        pst.setInt(4, getId());
-                        DataSource.executeQueryAsync(pst);
-                } catch (SQLException exception) {
-                        exception.printStackTrace();
-                }
-        }
-
-        public void open() {
-                try {
-                        PreparedStatement pst = DataSource.getConnection().prepareStatement(Queries.OPEN_REPORT);
-                        pst.setInt(1, getId());
-                        DataSource.executeQueryAsync(pst);
-                } catch (SQLException exception) {
-                        exception.printStackTrace();
-                }
-        }
-
-        public void delete() {
-                try {
-                        PreparedStatement pst = DataSource.getConnection().prepareStatement(Queries.DELETE_REPORT);
-                        pst.setInt(1, getId());
-                        DataSource.executeQueryAsync(pst);
-                } catch (SQLException exception) {
-                        exception.printStackTrace();
-                }
-        }
-
-        public String getWorldName() {
-                if (this.location == null) return null;
-                String[] rawLocationSplit = this.rawLocation.split(",");
-                return rawLocationSplit.length > 0 ? rawLocationSplit[0] : null;
-        }
-
-        public void teleport(Player p, TeleportMode teleportMode) {
-                if (!getServer().equalsIgnoreCase(Config.SERVER) && Config.BUNGEECORD) {
-                        BungeeListener.sendPlayerTo(p, getServer());
-                        BungeeListener.teleportPlayerTo(p, this, teleportMode);
-                        Common.send(
-                                p,
-                                Messages.TELEPORT_CROSS_SERVER
-                                        .replace("%from%", Config.SERVER)
-                                        .replace("%to%", getServer())
-                        );
-                } else {
-                        for (String cmd: Config.TELEPORT_COMMANDS) {
-                                cmd = cmd.replace("%player%", p.getName());
-
-                                if (cmd.startsWith("[console]"))
-                                        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd.replace("[console]", "").trim());
-                                else if (cmd.startsWith("[player]"))
-                                        p.performCommand(cmd.replace("[player]", "").trim());
-                        }
-
-                        PLAYERS_IN_TELEPORT_MODE.put(p, this.id);
-
-                        if (teleportMode == TeleportMode.REPORT_LOCATION)
-                                p.teleport(getLocation());
-                        else if (teleportMode == TeleportMode.REPORTER_LOCATION)
-                                p.teleport(Bukkit.getOfflinePlayer(getReporter()).getPlayer().getLocation());
-                        else if (teleportMode == TeleportMode.TARGET_LOCATION)
-                                p.teleport(Bukkit.getOfflinePlayer(getTarget()).getPlayer().getLocation());
-
-                        Common.send(
-                                p,
-                                Messages.TELEPORT
-                                        .replace(
-                                                "%id%", getId().toString()
-                                        )
-                        );
-                }
-        }
-
-
-        /**
-         * This method is used to retrieve all the reports from database
-         * @return All the reports that are saved in database
-         */
-        public static List<Report> all() {
-
-                List<Report> reports = new ArrayList<>();
-
-                try {
-                        Connection con = DataSource.getConnection();
-                        PreparedStatement pst = con.prepareStatement(Queries.SELECT_ALL_REPORTS);
-                        ResultSet rs = pst.executeQuery();
-                        reports = new ArrayList<>();
-                        Report report;
-                        while (rs.next()) {
-                                Integer id = rs.getInt("id");
-                                String reporter = rs.getString("reporter");
-                                String target = rs.getString("target");
-                                String reason = rs.getString("reason");
-                                String closedReason = rs.getString("closed_reason");
-                                String closedBy = rs.getString("closed_by");
-                                String server = rs.getString("server");
-                                String reportedAt = rs.getString("created_at");
-                                String reportedClosedAt = rs.getString("closed_at");
-                                String rawLocation = rs.getString("location");
-                                Location location = Serialization.deserializeLocation(rawLocation);
-
-                                report = new Report(reporter, target, reason, location);
-
-                                report.setId(id);
-                                report.setServer(server);
-                                report.setClosedReason(closedReason);
-                                report.setClosedBy(closedBy);
-                                report.setRawLocation(rawLocation);
-                                report.setCreatedAt(reportedAt);
-                                report.setClosedAt(reportedClosedAt);
-
-                                reports.add(report);
-                        }
-                } catch (SQLException exception) {
-                        exception.printStackTrace();
-                }
-
-                return reports;
-        }
-
-
-        private void notifyDiscord() {
-                Bukkit.getScheduler().runTaskAsynchronously(MegaReports.getInstance(), new Runnable() {
-                        @Override
-                        public void run() {
-                                DiscordWebhook webhook = new DiscordWebhook(Discord.DISCORD_WEBHOOK);
-                                DiscordWebhook.EmbedObject embedObject = new DiscordWebhook.EmbedObject();
-
-                                embedObject.setColor(Color.GREEN);
-                                embedObject.setTitle(
-                                        Discord.EMBED_TITLE
-                                                .replace("%reporter%", getReporter())
-                                                .replace("%target%", getTarget())
-                                                .replace("%reason%", getReason())
-                                );
-
-                                embedObject.setDescription(
-                                        Discord.EMBED_DESCRIPTION
-                                                .replace("%reporter%", getReporter())
-                                                .replace("%target%", getTarget())
-                                                .replace("%reason%", getReason())
-                                );
-
-                                embedObject.addField("Server:", getServer(), false);
-                                embedObject.addField("World:", location.getWorld().getName(), false);
-                                embedObject.addField("Reported At:", Common.getBeautifiedDt(), false);
-
-                                embedObject.setFooter(
-                                        Discord.EMBED_FOOTER
-                                                .replace("%reporter%", getReporter())
-                                                .replace("%target%", getTarget())
-                                                .replace("%reason%", getReason()),
-                                        null
-                                );
-
-                                embedObject.setThumbnail(
-                                        Discord.EMBED_THUMBNAIL
-                                                .replace("%reporter%", getReporter())
-                                                .replace("%target%", getTarget())
-                                );
-
-                                webhook.addEmbed(embedObject);
-
-                                try {
-                                        webhook.execute();
-                                } catch (IOException exception) {
-                                        Common.logPrefixed("&cFailed to send webhook notification, please check your network connectivity!", "&cStack Trace:");
-                                        exception.printStackTrace();
-                                }
-                        }
-                });
-        }
 
 }
