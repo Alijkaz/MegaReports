@@ -1,5 +1,6 @@
 package ir.jeykey.megareports.gui;
 
+import ir.jeykey.megacore.gui.HandleEvent;
 import ir.jeykey.megacore.gui.MegaPaginatedGui;
 import ir.jeykey.megacore.utils.Common;
 import ir.jeykey.megacore.utils.MegaItem;
@@ -7,6 +8,7 @@ import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.database.models.Report;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
@@ -23,6 +25,7 @@ public class ReportsGUI extends MegaPaginatedGui {
     public void setup() {
         List<Report> reportList = Report.all(getOffset(), getLimit());
         setItemsCount((int) Report.count());
+        setFiller(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
 
         for (int i = 0; i < getMaxItemsPerPage(); i++) {
             if (reportList.size() <= i)
@@ -97,7 +100,7 @@ public class ReportsGUI extends MegaPaginatedGui {
 
         for (int i = 36; i < 45; i++) {
             if (getSlot(i) == null) {
-                place(i, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
+                place(i, getFiller());
             }
         }
     }
