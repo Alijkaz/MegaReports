@@ -20,7 +20,7 @@ public class PlayerChat implements Listener {
                                 e.setCancelled(true);
 
                                 Common.send(e.getPlayer(), Messages.MANAGEMENT_CLOSING_CANCELLED);
-                                
+
                                 return;
                         }
 
