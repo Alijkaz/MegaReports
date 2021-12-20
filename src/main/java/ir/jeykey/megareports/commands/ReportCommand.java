@@ -25,7 +25,7 @@ public class ReportCommand implements CommandExecutor {
                 }
 
                 if (!sender.hasPermission("megareports.use.report")) {
-                        Common.send(sender, "&cYou don't have &4megareports.use.report &cpermission needed for admin commands!");
+                        Common.send(sender, Messages.MISSING_MANAGE_PERMISSION);
                         return true;
                 }
 

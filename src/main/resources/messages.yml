@@ -64,3 +64,21 @@ teleport-succesful: "&aYou have successfully teleport to report &c#%id%"
 #    - %from% = From server name
 #    - %to% = To server name
 teleport-another-server: "&aSending you to %to% to teleport to report"
+
+# This message will be sent when an admin opens management gui
+management-gui-opened: "&aReports Management GUI has been &2opened &afor you."
+
+# This message will be sent when an admin opens management gui
+management-gui-closed: "&aReports Management GUI has been &cclosed &afor you."
+
+# Telling a player that he's not allowed to execute management commands
+missing-manage-permission: "&cYou don't have &4&lmegareports.manage &cpermission needed for admin commands!"
+
+# Telling a player that he's not allowed to execute admin commands
+missing-admin-permission: "&cYou don't have &4megareports.admin &cpermission needed for admin commands!"
+
+# Telling a player that the executed command is not right
+wrong-usage: "&cThe command you have entered is not valid!"
+
+# Sending a user confirmation that the config has been reloaded
+config-reload: "&aYou've fully re-loaded configuration files."

@@ -1,6 +1,7 @@
 package ir.jeykey.megareports.commands;
 
 import ir.jeykey.megacore.utils.Common;
+import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.gui.ReportsGUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,13 +17,13 @@ public class ManageCommand implements CommandExecutor {
                 }
 
                 if (!sender.hasPermission("megareports.manage")) {
-                        Common.send(sender, "&cYou don't have &4&lmegareports.manage &cpermission needed for admin commands!");
+                        Common.send(sender, Messages.MISSING_MANAGE_PERMISSION);
                         return true;
                 }
 
                 new ReportsGUI((Player) sender).open();
 
-                Common.send(sender, "Reports Management GUI has been opened for you.");
+                Common.send(sender, Messages.MANAGEMENT_GUI_OPENED);
 
                 return true;
         }

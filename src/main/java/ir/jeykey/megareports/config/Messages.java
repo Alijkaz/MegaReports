@@ -15,6 +15,12 @@ public class Messages extends Configurable {
         public static String MISSING_REASON;
         public static String TELEPORT;
         public static String TELEPORT_CROSS_SERVER;
+        public static String MANAGEMENT_GUI_OPENED;
+        public static String MANAGEMENT_GUI_CLOSED;
+        public static String MISSING_MANAGE_PERMISSION;
+        public static String MISSING_ADMIN_PERMISSION;
+        public static String WRONG_USAGE;
+        public static String CONFIG_RELOAD;
 
         public Messages(MegaPlugin plugin) {
                 super(plugin, "messages.yml");
@@ -32,5 +38,11 @@ public class Messages extends Configurable {
                 MISSING_REASON = Common.colorize(getConfig().getString("missing-reason"));
                 TELEPORT = Common.colorize(getConfig().getString("teleport-succesful"));
                 TELEPORT_CROSS_SERVER = Common.colorize(getConfig().getString("teleport-another-server"));
+                MANAGEMENT_GUI_OPENED = Common.colorize(getConfig().getString("management-gui-opened"));
+                MANAGEMENT_GUI_CLOSED = Common.colorize(getConfig().getString("management-gui-closed"));
+                MISSING_MANAGE_PERMISSION = Common.colorize(getConfig().getString("missing-manage-permission"));
+                MISSING_ADMIN_PERMISSION = Common.colorize(getConfig().getString("missing-admin-permission"));
+                WRONG_USAGE = Common.colorize(getConfig().getString("wrong-usage"));
+                CONFIG_RELOAD = Common.colorize(getConfig().getString("config-reload"));
         }
 }

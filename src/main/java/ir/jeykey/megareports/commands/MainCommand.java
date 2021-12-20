@@ -16,15 +16,15 @@ public class MainCommand implements CommandExecutor {
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (args.length == 1) {
                         if (!sender.hasPermission("megareports.admin")) {
-                                Common.send(sender, "&cYou don't have &4megareports.admin &cpermission needed for admin commands!");
+                                Common.send(sender, Messages.MISSING_ADMIN_PERMISSION);
                                 return true;
                         }
 
                         if ("reload".equalsIgnoreCase(args[0])) {
                                 MegaReports.getConfigManager().reloadAll();
-                                Common.send(sender, "&aYou've fully re-loaded configuration files.");
+                                Common.send(sender, Messages.CONFIG_RELOAD);
                         } else {
-                                Common.send(sender, "&cEntered arg is invalid! Use help command.");
+                                Common.send(sender, Messages.WRONG_USAGE);
                         }
                 } else {
                         Common.send(sender, "&aMegaReports plugin is the one and only report plugin you'll ever need.");
