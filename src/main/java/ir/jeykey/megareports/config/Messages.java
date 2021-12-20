@@ -20,6 +20,7 @@ public class Messages extends Configurable {
         public static String MANAGEMENT_MENU_OPENED;
         public static String MANAGEMENT_MANAGING_REPORT;
         public static String MANAGEMENT_CLOSING_REASON;
+        public static String MANAGEMENT_CLOSING_CANCELLED;
         public static String MANAGEMENT_REPORT_OPENED;
         public static String MANAGEMENT_REPORT_CLOSED;
         public static String MANAGEMENT_REPORT_DELETED;
@@ -53,6 +54,7 @@ public class Messages extends Configurable {
                 MANAGEMENT_MENU_CLOSED = Common.colorize(getConfig().getString("management.menu-closed"));
                 MANAGEMENT_MANAGING_REPORT = Common.colorize(getConfig().getString("management.managing-report"));
                 MANAGEMENT_CLOSING_REASON = Common.colorize(getConfig().getString("management.enter-closing-reason"));
+                MANAGEMENT_CLOSING_CANCELLED = Common.colorize(getConfig().getString("management.closing-cancelled"));
                 MANAGEMENT_REPORT_OPENED = Common.colorize(getConfig().getString("management.opened-report"));
                 MANAGEMENT_REPORT_CLOSED = Common.colorize(getConfig().getString("management.closed-report"));
                 MANAGEMENT_REPORT_DELETED = Common.colorize(getConfig().getString("management.deleted-report"));

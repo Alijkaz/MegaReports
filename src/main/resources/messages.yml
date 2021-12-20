@@ -71,6 +71,9 @@ management:
   # Managing report message
   enter-closing-reason: "&aEnter your &creason &afor closing report or type &ccancel &ato abort the closing:"
 
+  # Closing report message
+  closing-cancelled: "&aClosing report has been cancelled"
+
   # Managing report message
   # Placeholders:
   #    - %id% = Report ID

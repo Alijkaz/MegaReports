@@ -14,6 +14,16 @@ public class PlayerChat implements Listener {
         @EventHandler
         public void onPlayerChat(final AsyncPlayerChatEvent e) {
                 if (ManageReportGUI.WAITING_CLOSE_REASON.containsKey(e.getPlayer())) {
+                        if (e.getMessage().equalsIgnoreCase("cancel")) {
+                                ManageReportGUI.WAITING_CLOSE_REASON.remove(e.getPlayer());
+
+                                e.setCancelled(true);
+
+                                Common.send(e.getPlayer(), Messages.MANAGEMENT_CLOSING_CANCELLED);
+                                
+                                return;
+                        }
+
                         Report report = ManageReportGUI.WAITING_CLOSE_REASON.get(e.getPlayer());
 
                         report.setClosedReason(e.getMessage());
