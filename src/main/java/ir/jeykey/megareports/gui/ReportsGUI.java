@@ -90,7 +90,6 @@ public class ReportsGUI extends MegaPaginatedGui {
                 "",
                 "&2Go to the next page"
         );
-        System.out.println("Current: " + getPage() + " | Last: " + getLastPage() + " | hasMorePages: " + hasMorePages() + " | Per Page: " + getMaxItemsPerPage() + " | Owner: " + getOwner().getName());
         if(hasMorePages()) {
             place(41, nextPage, (player, itemStack, slot, clickType) -> nextPage());
         }
