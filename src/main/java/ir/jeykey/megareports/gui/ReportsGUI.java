@@ -21,7 +21,7 @@ public class ReportsGUI extends MegaPaginatedGui {
 
     @Override
     public void setup() {
-        List<Report> reportList = Report.all(getOffset() - 1, getLimit() - 1);
+        List<Report> reportList = Report.all(getOffset() - 1, getLimit());
         setItemsCount((int) Report.count());
 
         for (int i = 0; i <= getMaxItemsPerPage(); i++) {
