@@ -79,7 +79,8 @@ management:
   # Managing report message
   # Placeholders:
   #    - %id% = Report ID
-  closed-report: "&c&aYou have successfully closed report &c#%id%"
+  #    - %reason% = Report closing reason
+  closed-report: "&aYou have successfully closed report &c#%id% &awith reason &c%reason%"
 
   # Managing report message
   # Placeholders:

@@ -130,7 +130,8 @@ public class ManageReportGUI extends MegaGui {
                 place(22, closeReportItem, (player, itemStack, slot, clickType) -> {
                         if (report.getClosedAt() == null) {
                                 WAITING_CLOSE_REASON.put(player, report);
-                                Common.send(player, "&aEnter your reason for closing report:");
+                                Common.send(player, Messages.MANAGEMENT_CLOSING_REASON);
+
                                 player.closeInventory();
                         } else {
                                 try {
@@ -139,7 +140,7 @@ public class ManageReportGUI extends MegaGui {
                                         Common.send(player, Messages.DATABASE_ISSUE);
                                 }
 
-                                Common.send(player, "&aYou have successfully opened report &c#" + report.getId());
+                                Common.send(player, Messages.MANAGEMENT_REPORT_OPENED.replace("%id%", Integer.toString(report.getId())));
                                 player.closeInventory();
                         }
                 });
@@ -150,7 +151,7 @@ public class ManageReportGUI extends MegaGui {
                         } catch (SQLException ignored) {
                                 Common.send(player, Messages.DATABASE_ISSUE);
                         }
-                        Common.send(player, "&aYou have successfully deleted report &c#" + report.getId());
+                        Common.send(player, Messages.MANAGEMENT_REPORT_DELETED.replace("%id%", Integer.toString(report.getId())));
                         player.closeInventory();
                 });
 
@@ -171,7 +172,7 @@ public class ManageReportGUI extends MegaGui {
                                 } catch (SQLException ignored) {
                                         Common.send(player, Messages.DATABASE_ISSUE);
                                 }
-                                Common.send(player, "&aYou have successfully opened report &c#" + report.getId());
+                                Common.send(player, Messages.MANAGEMENT_REPORT_OPENED.replace("%id%", Integer.toString(report.getId())));
                                 player.closeInventory();
                         }
                 });

@@ -21,7 +21,7 @@ public class PlayerChat implements Listener {
 
                         try {
                                 report.close();
-                                Common.send(e.getPlayer(), "&aYou have successfully closed report &c#" + report.getId() + " &awith reason: &2" + e.getMessage());
+                                Common.send(e.getPlayer(), Messages.MANAGEMENT_REPORT_CLOSED.replace("%id%", Integer.toString(report.getId())).replace("%reason%", e.getMessage()));
                         } catch (SQLException ignored) {
                                 Common.send(e.getPlayer(), Messages.DATABASE_ISSUE);
                         }
