@@ -17,13 +17,13 @@ public class ManageCommand implements CommandExecutor {
                 }
 
                 if (!sender.hasPermission("megareports.manage")) {
-                        Common.send(sender, Messages.MISSING_MANAGE_PERMISSION);
+                        Common.send(sender, Messages.MANAGEMENT_MISSING_PERMISSION);
                         return true;
                 }
 
                 new ReportsGUI((Player) sender).open();
 
-                Common.send(sender, Messages.MANAGEMENT_GUI_OPENED);
+                Common.send(sender, Messages.MANAGEMENT_MENU_OPENED);
 
                 return true;
         }

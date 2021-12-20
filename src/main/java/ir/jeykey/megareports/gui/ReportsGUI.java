@@ -3,6 +3,7 @@ package ir.jeykey.megareports.gui;
 import ir.jeykey.megacore.gui.MegaPaginatedGui;
 import ir.jeykey.megacore.utils.Common;
 import ir.jeykey.megacore.utils.MegaItem;
+import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.database.models.Report;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -58,7 +59,7 @@ public class ReportsGUI extends MegaPaginatedGui {
                 );
 
             place(i, reportItem, (player, itemStack, slot, clickType) -> {
-                Common.send(player, "&cNow managing report id " + report.get().getId());
+                Common.send(player, Messages.MANAGEMENT_MANAGING_REPORT.replace("%id%", Integer.toString(report.get().getId())));
                 new ManageReportGUI(report.get(), player).open();
             });
         }
@@ -101,10 +102,4 @@ public class ReportsGUI extends MegaPaginatedGui {
         }
     }
 
-//    @Override
-//    public void open() {
-////        setup();
-////        register();
-////        getOwner().openInventory(getInventory());
-//    }
 }

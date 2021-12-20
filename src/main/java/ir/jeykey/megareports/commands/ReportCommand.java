@@ -25,18 +25,18 @@ public class ReportCommand implements CommandExecutor {
                 }
 
                 if (!sender.hasPermission("megareports.use.report")) {
-                        Common.send(sender, Messages.MISSING_MANAGE_PERMISSION);
+                        Common.send(sender, Messages.MANAGEMENT_MISSING_PERMISSION);
                         return true;
                 }
 
                 Player p = (Player) sender;
 
                 if (args.length < 1) {
-                        Common.send(sender, Messages.MISSING_TARGET.replace("%reporter%", p.getName()));
+                        Common.send(sender, Messages.REPORT_MISSING_TARGET.replace("%reporter%", p.getName()));
                         return true;
                 } else if (args.length == 1) {
                         if (Config.REASON_REQUIRED) {
-                                Common.send(sender, Messages.MISSING_REASON.replace("%reporter%", p.getName()));
+                                Common.send(sender, Messages.REPORT_MISSING_REASON.replace("%reporter%", p.getName()));
                                 return true;
                         }
                 }
@@ -54,7 +54,7 @@ public class ReportCommand implements CommandExecutor {
                         if (Bukkit.getServer().getPlayerExact(target) == null) {
                                 Common.send(
                                         sender,
-                                        Messages.MISSING_ONLINE_TARGET
+                                        Messages.REPORT_MISSING_ONLINE_TARGET
                                                 .replace("%reporter%", sender.getName())
                                                 .replace("%target%", target)
                                 );
@@ -66,7 +66,7 @@ public class ReportCommand implements CommandExecutor {
                         if (Cooldown.isCooldown(p.getUniqueId())) {
                                 Common.send(
                                         sender,
-                                        Messages.COOLDOWN.replace(
+                                        Messages.REPORT_COOLDOWN.replace(
                                                 "%seconds%", Cooldown.getCooldownSeconds(p.getUniqueId()).toString()
                                         )
                                 );
@@ -87,7 +87,7 @@ public class ReportCommand implements CommandExecutor {
                 // Sending successful
                 Common.send(
                         sender,
-                        Messages.SUCCESSFUL
+                        Messages.REPORT_SUCCESSFUL
                                 .replace("%reporter%", p.getName())
                                 .replace("%target%", target)
                                 .replace("%reason%", reason)
@@ -99,7 +99,7 @@ public class ReportCommand implements CommandExecutor {
                         if (onlinePlayer.hasPermission("megareports.notify")) {
                                 Common.send(
                                         onlinePlayer,
-                                        Messages.NOTIFICATION
+                                        Messages.MANAGEMENT_NOTIFICATION
                                                 .replace("%reporter%", p.getName())
                                                 .replace("%target%", target)
                                                 .replace("%reason%", reason)

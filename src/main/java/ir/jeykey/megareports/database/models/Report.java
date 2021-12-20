@@ -140,7 +140,7 @@ public class Report {
             BungeeListener.teleportPlayerTo(p, this, teleportMode);
             Common.send(
                     p,
-                    Messages.TELEPORT_CROSS_SERVER
+                    Messages.MANAGEMENT_TELEPORT_SERVER
                             .replace("%from%", Config.SERVER)
                             .replace("%to%", getServer())
             );
@@ -165,7 +165,7 @@ public class Report {
 
             Common.send(
                     p,
-                    Messages.TELEPORT
+                    Messages.MANAGEMENT_TELEPORT
                             .replace(
                                     "%id%", Long.toString(getId())
                             )

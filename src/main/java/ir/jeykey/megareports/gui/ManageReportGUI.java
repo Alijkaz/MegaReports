@@ -158,13 +158,13 @@ public class ManageReportGUI extends MegaGui {
                         player.closeInventory();
 
                         new ReportsGUI(player).open();
-                        Common.send(player, "&aAll Reports GUI has been opened for you.");
+                        Common.send(player, Messages.MANAGEMENT_MENU_OPENED);
                 });
 
                 place(40, closeItem, (player, itemStack, slot, clickType) -> {
                         if (report.getClosedAt() == null) {
                                 player.closeInventory();
-                                Common.send(player, "&c&lManagement GUI &chas been closed for you.");
+                                Common.send(player, Messages.MANAGEMENT_MENU_CLOSED);
                         } else {
                                 try {
                                         report.open();

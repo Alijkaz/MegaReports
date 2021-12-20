@@ -16,13 +16,13 @@ public class MainCommand implements CommandExecutor {
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (args.length == 1) {
                         if (!sender.hasPermission("megareports.admin")) {
-                                Common.send(sender, Messages.MISSING_ADMIN_PERMISSION);
+                                Common.send(sender, Messages.ADMIN_MISSING_PERMISSION);
                                 return true;
                         }
 
                         if ("reload".equalsIgnoreCase(args[0])) {
                                 MegaReports.getConfigManager().reloadAll();
-                                Common.send(sender, Messages.CONFIG_RELOAD);
+                                Common.send(sender, Messages.ADMIN_CONFIG_RELOADED);
                         } else {
                                 Common.send(sender, Messages.WRONG_USAGE);
                         }

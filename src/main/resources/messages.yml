@@ -11,74 +11,105 @@
 #                         \______/                               |__/         
 
 
-
 # Main prefix for all plugin messages
 prefix: "&4[&cMegaReports&4] "
-
-# You're on cooldown message
-# Placeholders:
-#    - %seconds% = to show cooldown seconds
-cooldown: "&cYou're on cooldown, please try again in &4%seconds% &cseconds!"
-
-# Successful report message
-# Placeholders:
-#    - %reporter% = Username of the reporter
-#    - %target% = Username of the player that get reported
-#    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
-successful: "&aYou've reported &c&l%target%&a, Our team will review your report ASAP!"
 
 # Failed to act as required with database
 database-issue: "&cThere's problem with fetching database, Please contact server administrators"
 
-# Staff notification report message
-# Placeholders:
-#    - %reporter% = Username of the reporter
-#    - %target% = Username of the player that get reported
-#    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
-#    - %server% =Reported in server ( Useful in over proxy/bungee mode )
-notification: "&cNew report has been arrived! &4%reporter% &creported &4%target% &cfor &4%reason% &cin &4%server%"
-
-# Missing target ( /report <target> ) message
-# Placeholders:
-#    - %reporter% = Username of the reporter
-missing-target: "&c%reporter%, Please specify your &4target &cafter /report command"
-
-# Missing *online* target message
-# Placeholders:
-#    - %reporter% = Username of the reporter
-#    - %target% = Username of the target
-missing-online-target: "&c%reporter%, %target% is not online now and you can't report him!"
-
-# Missing reason ( /report <target> <reason> ) message
-# Placeholders:
-#    - %reporter% = Username of the reporter
-missing-reason: "&c%reporter%, Please specify your &4reason &cin the end of report command"
-
-# Teleported to report message
-# Placeholders:
-#    - %id% = Id of that specific report
-teleport-succesful: "&aYou have successfully teleport to report &c#%id%"
-
-# Sending user to another server to teleport to report location message
-# Placeholders:
-#    - %from% = From server name
-#    - %to% = To server name
-teleport-another-server: "&aSending you to %to% to teleport to report"
-
-# This message will be sent when an admin opens management gui
-management-gui-opened: "&aReports Management GUI has been &2opened &afor you."
-
-# This message will be sent when an admin opens management gui
-management-gui-closed: "&aReports Management GUI has been &cclosed &afor you."
-
-# Telling a player that he's not allowed to execute management commands
-missing-manage-permission: "&cYou don't have &4&lmegareports.manage &cpermission needed for admin commands!"
-
-# Telling a player that he's not allowed to execute admin commands
-missing-admin-permission: "&cYou don't have &4megareports.admin &cpermission needed for admin commands!"
-
 # Telling a player that the executed command is not right
 wrong-usage: "&cThe command you have entered is not valid!"
 
-# Sending a user confirmation that the config has been reloaded
-config-reload: "&aYou've fully re-loaded configuration files."
+# Public /report command messages
+report:
+  # You're on cooldown message
+  # Placeholders:
+  #    - %seconds% = to show cooldown seconds
+  cooldown: "&cYou're on cooldown, please try again in &4%seconds% &cseconds!"
+
+  # Successful report message
+  # Placeholders:
+  #    - %reporter% = Username of the reporter
+  #    - %target% = Username of the player that get reported
+  #    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
+  successful: "&aYou've reported &c&l%target%&a, Our team will review your report ASAP!"
+
+  # Missing requirements upon reporting (from config.yml)
+  missing-requirement:
+    # Missing target ( /report <target> ) message
+    # Placeholders:
+    #    - %reporter% = Username of the reporter
+    target: "&c%reporter%, Please specify your &4target &cafter /report command"
+
+    # Missing *online* target message
+    # Placeholders:
+    #    - %reporter% = Username of the reporter
+    #    - %target% = Username of the target
+    online-target: "&c%reporter%, %target% is not online now and you can't report him!"
+
+    # Missing reason ( /report <target> <reason> ) message
+    # Placeholders:
+    #    - %reporter% = Username of the reporter
+    reason: "&c%reporter%, Please specify your &4reason &cin the end of report command"
+
+# Management messages
+management:
+  # Missing management permissions message
+  missing-permission: "&cYou don't have &4megareports.manage &cpermission needed for management commands!"
+
+  # This message will be sent when an admin opens management gui
+  menu-opened: "&aReports Management GUI has been &2opened &afor you."
+
+  # This message will be sent when an admin opens management gui
+  menu-closed: "&aReports Management GUI has been &cclosed &afor you."
+
+  # Managing report message
+  # Placeholders:
+  #    - %id% = Report ID
+  managing-report: "&cNow managing report id %id%"
+
+  # Managing report message
+  enter-closing-reason: "&aEnter your &creason &afor closing report or type &ccancel &ato abort the closing:"
+
+  # Managing report message
+  # Placeholders:
+  #    - %id% = Report ID
+  opened-report: "&c&aYou have successfully opened report &c#%id%"
+
+  # Managing report message
+  # Placeholders:
+  #    - %id% = Report ID
+  closed-report: "&c&aYou have successfully closed report &c#%id%"
+
+  # Managing report message
+  # Placeholders:
+  #    - %id% = Report ID
+  deleted-report: "&aYou have successfully deleted report &c#%id%"
+
+  # Teleported to report message
+  # Placeholders:
+  #    - %id% = Id of that specific report
+  teleport: "&aYou have successfully teleport to report &c#%id%"
+
+  # Sending user to another server to teleport to report location message
+  # Placeholders:
+  #    - %from% = From server name
+  #    - %to% = To server name
+  teleport-server: "&aSending you to %to% to teleport to report"
+
+  # Staff notification report message
+  # Placeholders:
+  #    - %reporter% = Username of the reporter
+  #    - %target% = Username of the player that get reported
+  #    - %reason% = /report user <reason> will show the reason part ( if reason is not required in config.yml may return empty space )
+  #    - %server% =Reported in server ( Useful in over proxy/bungee mode )
+  notification: "&cNew report has been arrived! &4%reporter% &creported &4%target% &cfor &4%reason% &cin &4%server%"
+
+# Admin messages
+admin:
+  # Telling a player that he's not allowed to execute admin commands
+  missing-permission: "&cYou don't have &4megareports.admin &cpermission needed for admin commands!"
+
+  # Sending a user confirmation that the config has been reloaded
+  config-reloaded: "&aYou've fully re-loaded configuration files."
+
