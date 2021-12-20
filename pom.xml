@@ -90,7 +90,7 @@
         <dependency>
             <groupId>com.github.Alijkaz</groupId>
             <artifactId>MegaCore</artifactId>
-            <version>75b6d6c</version>
+            <version>abaa48a</version>
         </dependency>
     </dependencies>
 

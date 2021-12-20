@@ -1,17 +1,13 @@
 package ir.jeykey.megareports.gui;
 
-import ir.jeykey.megacore.gui.HandleEvent;
 import ir.jeykey.megacore.gui.MegaPaginatedGui;
 import ir.jeykey.megacore.utils.Common;
 import ir.jeykey.megacore.utils.MegaItem;
-import ir.jeykey.megareports.config.Messages;
 import ir.jeykey.megareports.database.models.Report;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -19,13 +15,13 @@ public class ReportsGUI extends MegaPaginatedGui {
     public ReportsGUI(Player owner) {
         super(Common.colorize("&cReports Management"), 45, owner);
         setMaxItemsPerPage(36);
+        setFiller(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
     }
 
     @Override
     public void setup() {
         List<Report> reportList = Report.all(getOffset(), getLimit());
         setItemsCount((int) Report.count());
-        setFiller(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
 
         for (int i = 0; i < getMaxItemsPerPage(); i++) {
             if (reportList.size() <= i)
@@ -94,7 +90,7 @@ public class ReportsGUI extends MegaPaginatedGui {
                 "",
                 "&2Go to the next page"
         );
-        if(!isLastPage()) {
+        if(!isLastPage() && hasMorePages()) {
             place(41, nextPage, (player, itemStack, slot, clickType) -> nextPage());
         }
 
