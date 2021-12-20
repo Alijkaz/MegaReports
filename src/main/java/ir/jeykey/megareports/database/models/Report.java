@@ -80,7 +80,7 @@ public class Report {
         setRawLocation(Serialization.serializeLocation(getLocation()));
     }
 
-    public void save() throws SQLException {
+    public void create() throws SQLException {
         setServer(Config.SERVER);
         setCreatedAt(getDate());
 
@@ -90,6 +90,10 @@ public class Report {
         if (Discord.DISCORD_ENABLED)
             this.notifyDiscord();
 
+    }
+
+    public void update() throws SQLException {
+        MegaReports.getReportsDao().update(this);
     }
 
     public static Report find(int id) throws SQLException {
@@ -102,14 +106,14 @@ public class Report {
         setClosedAt(getDate());
         setClosedBy(getClosedBy());
         setClosedReason(getClosedReason());
-        save();
+        update();
     }
 
     public void open() throws SQLException {
         setClosedAt(null);
         setClosedBy(null);
         setClosedReason(null);
-        save();
+        update();
     }
 
     public void delete() throws SQLException {

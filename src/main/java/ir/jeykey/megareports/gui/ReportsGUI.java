@@ -24,7 +24,7 @@ public class ReportsGUI extends MegaPaginatedGui {
         setItemsCount((int) Report.count());
 
         for (int i = 0; i < getMaxItemsPerPage(); i++) {
-            if (reportList.size() <= i)
+            if (reportList.size() < i)
                 break;
             AtomicReference<Report> report = new AtomicReference<>(reportList.get(i));
 

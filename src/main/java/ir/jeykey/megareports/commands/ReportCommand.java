@@ -79,7 +79,7 @@ public class ReportCommand implements CommandExecutor {
 
                 // Saving report to database
                 try {
-                        report.save();
+                        report.create();
                 } catch (SQLException exception) {
                         Common.send(sender, Messages.DATABASE_ISSUE);
                 }
