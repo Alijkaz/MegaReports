@@ -20,11 +20,11 @@ public class ReportsGUI extends MegaPaginatedGui {
 
     @Override
     public void setup() {
-        List<Report> reportList = Report.all(getOffset(), getLimit());
+        List<Report> reportList = Report.all(getOffset() - 1, getLimit() - 1);
         setItemsCount((int) Report.count());
 
         for (int i = 0; i < getMaxItemsPerPage(); i++) {
-            if (reportList.size() < i)
+            if (reportList.size() <= i)
                 break;
             AtomicReference<Report> report = new AtomicReference<>(reportList.get(i));
 
@@ -90,7 +90,8 @@ public class ReportsGUI extends MegaPaginatedGui {
                 "",
                 "&2Go to the next page"
         );
-        if(!isLastPage() && hasMorePages()) {
+        System.out.println("Current: " + getPage() + " | Last: " + getLastPage() + " | hasMorePages: " + hasMorePages() + " | Per Page: " + getMaxItemsPerPage() + " | Owner: " + getOwner().getName());
+        if(hasMorePages()) {
             place(41, nextPage, (player, itemStack, slot, clickType) -> nextPage());
         }
 
@@ -100,4 +101,11 @@ public class ReportsGUI extends MegaPaginatedGui {
             }
         }
     }
+
+//    @Override
+//    public void open() {
+////        setup();
+////        register();
+////        getOwner().openInventory(getInventory());
+//    }
 }
