@@ -33,13 +33,13 @@ public class ReportsGUI extends MegaPaginatedGui {
                     Material.EMERALD,
                     "&2&l#" + report.get().getId() + " &aReport " + report.get().getTarget(),
                     "",
-                    "&aServer: &2" + report.get().getServer(),
-                    "&aReported At: &2" + report.get().getCreatedAt(),
-                    "&aReported Closed At: &2" + report.get().getClosedAt(),
-                    "&aClosed By: &2" + report.get().getClosedBy(),
-                    "&aClosed Reason: &2" + report.get().getClosedReason(),
+                    "&aServer &a» &2" + report.get().getServer(),
+                    "&aReported At &a» &2" + report.get().getCreatedAt(),
+                    "&aReported Closed At &a» &2" + report.get().getClosedAt(),
+                    "&aClosed By &a» &2" + report.get().getClosedBy(),
+                    "&aClosed Reason &a» &2" + report.get().getClosedReason(),
                     "",
-                    "&2&l[ &aCLICK TO MANAGE &2&l]"
+                    "&a● &2CLICK TO MANAGE &a●"
             );
 
             if (report.get().getClosedAt() == null)
@@ -47,15 +47,15 @@ public class ReportsGUI extends MegaPaginatedGui {
                         Material.REDSTONE_BLOCK,
                         "&4&l#" + report.get().getId() + " &cReport " + report.get().getTarget(),
                         "",
-                        "&cServer: &4" + report.get().getServer(),
-                        "&cReporter: &4" + report.get().getReporter(),
-                        "&cTarget: &4" + report.get().getTarget(),
-                        "&cReason: &4" + report.get().getReason(),
-                        "&cWorld: &4" + report.get().getWorldName(),
-                        "&cXYZ: &4" + Math.round(report.get().getLocation().getX()) + "," + Math.round(report.get().getLocation().getY()) + "," + Math.round(report.get().getLocation().getZ()),
-                        "&cReported At: &4" + report.get().getCreatedAt(),
+                        "&cServer &4» &c" + report.get().getServer(),
+                        "&cReporter &4» &c" + report.get().getReporter(),
+                        "&cTarget &4» &c" + report.get().getTarget(),
+                        "&cReason &4» &c" + report.get().getReason(),
+                        "&cWorld &4» &c" + report.get().getWorldName(),
+                        "&cXYZ &4» &c" + Math.round(report.get().getLocation().getX()) + "," + Math.round(report.get().getLocation().getY()) + "," + Math.round(report.get().getLocation().getZ()),
+                        "&cReported At &4» &c" + report.get().getCreatedAt(),
                         "",
-                        "&4&l[ &cCLICK TO MANAGE &4&l]"
+                        "&4● &cCLICK TO MANAGE &4●"
                 );
 
             place(i, reportItem, (player, itemStack, slot, clickType) -> {
@@ -70,7 +70,7 @@ public class ReportsGUI extends MegaPaginatedGui {
                 Material.STONE_BUTTON,
                 "&cPrevious Page",
                 "",
-                "&4Go to the previous page"
+                "&c● &4Go to the previous page &c●"
         );
 
         if (!isFirstPage()) {
@@ -81,7 +81,7 @@ public class ReportsGUI extends MegaPaginatedGui {
                 Material.BARRIER,
                 "&cClose",
                 "",
-                "&4Close Management Menu"
+                "&c● &4Close Management Menu &c●"
         );
         place(40, closeItem, (player, itemStack, slot, clickType) -> close());
 
@@ -89,7 +89,7 @@ public class ReportsGUI extends MegaPaginatedGui {
                 Material.STONE_BUTTON,
                 "&aNext Page",
                 "",
-                "&2Go to the next page"
+                "&a● &2Go to the next page &a●"
         );
         if(hasMorePages()) {
             place(41, nextPage, (player, itemStack, slot, clickType) -> nextPage());

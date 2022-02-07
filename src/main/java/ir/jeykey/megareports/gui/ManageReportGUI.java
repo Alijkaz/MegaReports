@@ -32,13 +32,13 @@ public class ManageReportGUI extends MegaGui {
                         Material.SAND,
                         "&4&l#" + report.getId() + " &cReport " + report.getTarget(),
                         "",
-                        "&bServer &a»  &4" + report.getServer(),
-                        "&bReporter &a» &4" + report.getReporter(),
-                        "&bTarget &a» &4" + report.getTarget(),
-                        "&bReason &a» &4" + report.getReason(),
-                        "&bWorld &a» &4" + report.getWorldName(),
-                        "&bXYZ &a» &4" + Math.round(report.getLocation().getX()) + "," + Math.round(report.getLocation().getY()) + "," + Math.round(report.getLocation().getZ()),
-                        "&bReported At&a » &4" + report.getCreatedAt()
+                        "&bServer &a»  &2" + report.getServer(),
+                        "&bReporter &a» &2" + report.getReporter(),
+                        "&bTarget &a» &2" + report.getTarget(),
+                        "&bReason &a» &2" + report.getReason(),
+                        "&bWorld &a» &2" + report.getWorldName(),
+                        "&bXYZ &a» &2" + Math.round(report.getLocation().getX()) + "," + Math.round(report.getLocation().getY()) + "," + Math.round(report.getLocation().getZ()),
+                        "&bReported At&a » &2" + report.getCreatedAt()
                 );
 
                 MegaItem closeItem = new MegaItem(
@@ -72,7 +72,7 @@ public class ManageReportGUI extends MegaGui {
                                 "&e&lMIDDLE CLICK &6» &eTeleport to Report Location",
                                 "&e&lRIGHT CLICK &6» &eTeleport to Target",
                                 "",
-                                "&● &2Teleport to report location &a●"
+                                "&a● &2Teleport to report location &a●"
                         );
                 }
 
@@ -80,23 +80,23 @@ public class ManageReportGUI extends MegaGui {
                         Material.EMERALD_BLOCK,
                         "&e✔ &6Open Report",
                         "",
-                        "&6✔ &eReopen report"
+                        "&e✔ &6Reopen report"
                 );
 
                 if (report.getClosedAt() == null) {
                         closeReportItem = new MegaItem(
                                 Material.REDSTONE_BLOCK,
-                                "&e✘ &6Close Report",
+                                "&c✘ &4Close Report",
                                 "",
-                                "&6✘ &eAssign report as closed"
+                                "&c✘ &4Assign report as closed"
                         );
                 }
 
                 MegaItem deleteReportItem = new MegaItem(
                         Material.REDSTONE_TORCH_ON,
-                        "&4✘ &c&lDelete Report",
+                        "&c✘ &4&lDelete Report",
                         "",
-                        "&c✘ &4&lCompletely delete report"
+                        "&c✘ &c&lCompletely delete report"
                 );
 
                 place(20, teleportReportItem, (player, itemStack, slot, clickType) -> {
